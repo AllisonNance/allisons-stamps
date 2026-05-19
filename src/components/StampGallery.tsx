@@ -3,19 +3,14 @@
 import { useState } from "react";
 import StampThumbnail from "./StampThumbnail";
 import Pagination from "./Pagination";
-
-interface StampGalleryItem {
-  id: string;
-  src: string;
-  alt: string;
-  href?: string;
-}
+import type { GalleryItem } from "./HomePageClient";
 
 interface StampGalleryProps {
-  items: StampGalleryItem[];
+  items: GalleryItem[];
   columnsLarge?: number;
   columnsSmall?: number;
   itemsPerPage?: number;
+  onStampClick?: (item: GalleryItem) => void;
 }
 
 export default function StampGallery({
@@ -23,6 +18,7 @@ export default function StampGallery({
   columnsLarge = 5,
   columnsSmall = 2,
   itemsPerPage = 100,
+  onStampClick,
 }: StampGalleryProps) {
   const totalPages = Math.ceil(items.length / itemsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,9 +54,9 @@ export default function StampGallery({
           }
         `}</style>
         {pageItems.map((item) => (
-          <div key={item.id}>
+          <div key={item.id} onClick={() => onStampClick?.(item)}>
             <StampThumbnail
-              src={item.src}
+              src={item.thumbnailSrc}
               alt={item.alt}
             />
           </div>

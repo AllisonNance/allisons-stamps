@@ -35,13 +35,11 @@ export default function StampThumbnail({
       style={{
         position: "relative",
         width: "100%",
-        aspectRatio: "400 / 533",
-        overflow: "hidden",
         cursor: "pointer",
       }}
     >
       {/* Stamp border - desktop hover only */}
-      {isDesktop && (
+      {isDesktop && showHover && (
         <div
           style={{
             position: "absolute",
@@ -49,8 +47,6 @@ export default function StampThumbnail({
             backgroundImage: STAMP_BORDER,
             backgroundSize: "100% 100%",
             backgroundRepeat: "no-repeat",
-            opacity: showHover ? 1 : 0,
-            transition: "opacity 0.25s ease",
             zIndex: 1,
             pointerEvents: "none",
           }}
@@ -60,13 +56,10 @@ export default function StampThumbnail({
       {/* Image */}
       <div
         style={{
-          position: "absolute",
-          top: showHover ? "5.1%" : 0,
-          left: showHover ? "6.8%" : 0,
-          right: showHover ? "5.8%" : 0,
-          bottom: showHover ? "5.1%" : 0,
-          transition: "all 0.25s ease",
+          padding: showHover ? "7% 8.5% 7% 7.5%" : 0,
+          transition: "padding 0.25s ease",
           zIndex: 2,
+          position: "relative",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -75,8 +68,7 @@ export default function StampThumbnail({
           alt={alt}
           style={{
             width: "100%",
-            height: "100%",
-            objectFit: "cover",
+            height: "auto",
             display: "block",
           }}
         />

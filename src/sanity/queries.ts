@@ -2,25 +2,31 @@ import { client } from "./client";
 
 export interface Stamp {
   _id: string;
-  title: string;
+  name: string;
   slug: { current: string };
-  image: {
+  thumbnail: {
     asset: { _ref: string };
-    hotspot?: { x: number; y: number };
+    alt?: string;
+  };
+  largeImage?: {
+    asset: { _ref: string };
+    alt?: string;
   };
   country?: string;
   year?: number;
-  denomination?: string;
-  condition?: string;
+  designer?: string;
   description?: string;
-  tags?: string[];
+  collection?: { _id: string; title: string; slug: { current: string } };
+  category?: { _id: string; title: string; slug: { current: string } };
 }
 
 export async function getAllStamps(): Promise<Stamp[]> {
   try {
     return await client.fetch(
       `*[_type == "stamp"] | order(_createdAt desc) {
-        _id, title, slug, image, country, year, denomination, condition, tags
+        _id, name, slug, thumbnail, largeImage, country, year, designer, description,
+        collection->{_id, title, slug},
+        category->{_id, title, slug}
       }`
     );
   } catch {
@@ -32,7 +38,9 @@ export async function getStampBySlug(slug: string): Promise<Stamp | null> {
   try {
     return await client.fetch(
       `*[_type == "stamp" && slug.current == $slug][0] {
-        _id, title, slug, image, country, year, denomination, condition, description, tags
+        _id, name, slug, thumbnail, largeImage, country, year, designer, description,
+        collection->{_id, title, slug},
+        category->{_id, title, slug}
       }`,
       { slug }
     );
@@ -41,17 +49,16 @@ export async function getStampBySlug(slug: string): Promise<Stamp | null> {
   }
 }
 
-export async function getStampsByCountry(country: string): Promise<Stamp[]> {
-  return client.fetch(
-    `*[_type == "stamp" && country == $country] | order(year asc) {
-      _id, title, slug, image, country, year, denomination, condition, tags
-    }`,
-    { country }
-  );
-}
-
 export async function getAllCountries(): Promise<string[]> {
   return client.fetch(
     `array::unique(*[_type == "stamp" && defined(country)].country)`
   );
+}
+
+export async function getAllCategories(): Promise<{ _id: string; title: string }[]> {
+  return client.fetch(`*[_type == "category"] | order(title asc) { _id, title }`);
+}
+
+export async function getAllCollections(): Promise<{ _id: string; title: string }[]> {
+  return client.fetch(`*[_type == "collection"] | order(title asc) { _id, title }`);
 }

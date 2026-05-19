@@ -21,6 +21,8 @@ export default async function StampPage({
 
   if (!stamp) notFound();
 
+  const image = stamp.largeImage ?? stamp.thumbnail;
+
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
       <Link
@@ -32,10 +34,10 @@ export default async function StampPage({
 
       <div className="mt-4 grid gap-10 md:grid-cols-2">
         <div className="relative aspect-square overflow-hidden rounded-lg bg-white border border-[var(--color-border)]">
-          {stamp.image && (
+          {image && (
             <Image
-              src={urlFor(stamp.image).width(800).height(800).url()}
-              alt={stamp.title}
+              src={urlFor(image).width(800).height(800).url()}
+              alt={image.alt ?? stamp.name}
               fill
               className="object-contain p-6"
               priority
@@ -44,7 +46,7 @@ export default async function StampPage({
         </div>
 
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{stamp.title}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{stamp.name}</h1>
 
           <dl className="mt-6 space-y-3">
             {stamp.country && (
@@ -63,22 +65,20 @@ export default async function StampPage({
                 <dd className="text-sm">{stamp.year}</dd>
               </div>
             )}
-            {stamp.denomination && (
+            {stamp.category && (
               <div className="flex gap-3">
                 <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-icon)]">
-                  Denomination
+                  Category
                 </dt>
-                <dd className="text-sm">{stamp.denomination}</dd>
+                <dd className="text-sm">{stamp.category.title}</dd>
               </div>
             )}
-            {stamp.condition && (
+            {stamp.collection && (
               <div className="flex gap-3">
                 <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-icon)]">
-                  Condition
+                  Collection
                 </dt>
-                <dd className="text-sm capitalize">
-                  {stamp.condition.replace("-", " ")}
-                </dd>
+                <dd className="text-sm">{stamp.collection.title}</dd>
               </div>
             )}
           </dl>
@@ -87,19 +87,6 @@ export default async function StampPage({
             <p className="mt-6 text-sm leading-relaxed text-[var(--color-icon)]">
               {stamp.description}
             </p>
-          )}
-
-          {stamp.tags && stamp.tags.length > 0 && (
-            <div className="mt-6 flex flex-wrap gap-2">
-              {stamp.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-[var(--color-border)] px-3 py-1 text-xs text-[var(--color-icon)]"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
           )}
         </div>
       </div>

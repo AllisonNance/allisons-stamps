@@ -38,7 +38,9 @@ export default function StampModal({
   description,
   collection,
 }: StampModalProps) {
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia("(min-width: 1024px)").matches : false
+  );
   const descRef = useRef<HTMLDivElement>(null);
   const descTrackRef = useRef<HTMLDivElement>(null);
   const [descScrollProgress, setDescScrollProgress] = useState(0);
@@ -88,7 +90,7 @@ export default function StampModal({
     if (!open || !description) return;
     const el = descRef.current;
     if (!el) return;
-    const raf = requestAnimationFrame(() => updateDescScroll());
+    const raf = requestAnimationFrame(() => requestAnimationFrame(() => updateDescScroll()));
     el.addEventListener("scroll", updateDescScroll);
     const observer = new ResizeObserver(() => updateDescScroll());
     observer.observe(el);
@@ -97,7 +99,7 @@ export default function StampModal({
       el.removeEventListener("scroll", updateDescScroll);
       observer.disconnect();
     };
-  }, [open, description, updateDescScroll]);
+  }, [open, description, title, updateDescScroll]);
 
   function handleDescScrollbarDrag(clientY: number) {
     const track = descTrackRef.current;
@@ -180,9 +182,9 @@ export default function StampModal({
           style={{
             position: "relative",
             display: "flex",
-            width: "90vw",
-            maxWidth: 1200,
-            height: "90vh",
+            justifyContent: "center",
+            width: "100vw",
+            height: "100vh",
             backgroundColor: "#1a1a1a",
             zIndex: 1,
             overflow: "hidden",
@@ -190,7 +192,7 @@ export default function StampModal({
         >
           {closeButton}
 
-          {/* Image — flush top/left/bottom, sized by height */}
+          {/* Image — centered vertically */}
           <div
             style={{
               flexShrink: 0,
@@ -198,6 +200,9 @@ export default function StampModal({
               aspectRatio: "3 / 4",
               backgroundColor: "#e8e4dc",
               overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -207,26 +212,27 @@ export default function StampModal({
               style={{
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
+                objectFit: "contain",
               }}
             />
           </div>
 
-          {/* Right panel — no scroll on the panel itself */}
+          {/* Right panel — centered vertically */}
           <div
             style={{
-              flex: 1,
+              flex: "0 1 800px",
               display: "flex",
               flexDirection: "column",
-              padding: "48px 40px 32px",
+              justifyContent: "center",
+              padding: "72px 40px 40px",
               color: "#ffffff",
               overflow: "hidden",
             }}
           >
             <h1
               style={{
-                fontSize: 28,
-                fontWeight: 500,
+                fontSize: "2.5rem",
+                fontWeight: 300,
                 margin: "0 0 28px",
                 lineHeight: 1.3,
                 flexShrink: 0,
@@ -239,13 +245,15 @@ export default function StampModal({
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 10,
+                gap: 16,
                 marginBottom: 24,
                 flexShrink: 0,
+                backgroundColor: "rgb(55, 55, 55)",
+                padding: 24,
               }}
             >
               {details.map((d) => (
-                <div key={d.label} style={{ fontSize: 14, lineHeight: 1.5 }}>
+                <div key={d.label} style={{ fontSize: "1.15rem", lineHeight: 1.5 }}>
                   <span style={{ fontWeight: 600 }}>{d.label}:</span>{" "}
                   <span style={{ opacity: 0.85 }}>{d.value}</span>
                 </div>
@@ -270,7 +278,7 @@ export default function StampModal({
                   style={{
                     position: "absolute",
                     inset: 0,
-                    fontSize: 14,
+                    fontSize: "1rem",
                     lineHeight: 1.7,
                     opacity: 0.85,
                     overflowY: "auto",
@@ -382,8 +390,8 @@ export default function StampModal({
       <div style={{ padding: "24px 16px 40px" }}>
         <h1
           style={{
-            fontSize: 22,
-            fontWeight: 500,
+            fontSize: 36,
+            fontWeight: 300,
             margin: "0 0 24px",
             lineHeight: 1.3,
           }}
@@ -391,9 +399,9 @@ export default function StampModal({
           {title}
         </h1>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24, backgroundColor: "rgb(55, 55, 55)", padding: 16 }}>
           {details.map((d) => (
-            <div key={d.label} style={{ fontSize: 14, lineHeight: 1.5 }}>
+            <div key={d.label} style={{ fontSize: "1.15rem", lineHeight: 1.5 }}>
               <span style={{ fontWeight: 600 }}>{d.label}:</span>{" "}
               <span style={{ opacity: 0.85 }}>{d.value}</span>
             </div>
@@ -403,7 +411,7 @@ export default function StampModal({
         {description && (
           <div
             style={{
-              fontSize: 14,
+              fontSize: "1rem",
               lineHeight: 1.7,
               opacity: 0.85,
               marginBottom: 32,

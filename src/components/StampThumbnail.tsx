@@ -16,7 +16,9 @@ export default function StampThumbnail({
   alt,
 }: StampThumbnailProps) {
   const [hovered, setHovered] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia("(min-width: 1024px)").matches : false
+  );
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
@@ -38,7 +40,7 @@ export default function StampThumbnail({
         cursor: "pointer",
       }}
     >
-      {/* Stamp border - desktop hover only */}
+      {/* Stamp border overlay - matches the image size */}
       {isDesktop && showHover && (
         <div
           style={{
@@ -47,32 +49,27 @@ export default function StampThumbnail({
             backgroundImage: STAMP_BORDER,
             backgroundSize: "100% 100%",
             backgroundRepeat: "no-repeat",
-            zIndex: 1,
+            zIndex: 3,
             pointerEvents: "none",
           }}
         />
       )}
 
-      {/* Image */}
-      <div
+      {/* Image - scales down on hover, container stays the same size */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt}
         style={{
-          padding: showHover ? "7% 8.5% 7% 7.5%" : 0,
-          transition: "padding 0.25s ease",
-          zIndex: 2,
+          width: "100%",
+          height: "auto",
+          display: "block",
+          transform: showHover ? "scale(0.84)" : "scale(1)",
+          transition: "transform 0.25s ease",
           position: "relative",
+          zIndex: 4,
         }}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={src}
-          alt={alt}
-          style={{
-            width: "100%",
-            height: "auto",
-            display: "block",
-          }}
-        />
-      </div>
+      />
     </div>
   );
 }

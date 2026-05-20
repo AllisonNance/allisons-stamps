@@ -22,6 +22,14 @@ export default function FilterDropdown({
   const [search, setSearch] = useState("");
   const ref = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const valid = checked.filter((c) => items.includes(c));
+    if (valid.length !== checked.length) {
+      setChecked(valid);
+      onChange?.(valid);
+    }
+  }, [items]);
+
   const searchable = items.length > 10;
   const filtered = search
     ? items.filter((item) => item.toLowerCase().includes(search.toLowerCase()))

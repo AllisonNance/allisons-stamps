@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import SiteHeader from "./SiteHeader";
 import StampGallery from "./StampGallery";
 import StampModal from "./StampModal";
+import BackToTop from "./BackToTop";
 
 interface FilterConfig {
   label: string;
@@ -29,16 +30,75 @@ interface HomePageClientProps {
   items: GalleryItem[];
 }
 
-export default function HomePageClient({ filters, items }: HomePageClientProps) {
+function getItemValue(item: GalleryItem, label: string): string | undefined {
+  switch (label) {
+    case "Country": return item.country;
+    case "Year": return item.year != null ? String(item.year) : undefined;
+    case "Category": return item.category;
+    case "Collection": return item.collection;
+  }
+}
+
+function filterItems(items: GalleryItem[], selections: Record<string, string[]>, excludeLabel?: string): GalleryItem[] {
+  return items.filter((item) => {
+    for (const [label, selected] of Object.entries(selections)) {
+      if (label === excludeLabel) continue;
+      if (selected.length === 0) continue;
+      const value = getItemValue(item, label);
+      if (!value || !selected.includes(value)) return false;
+    }
+    return true;
+  });
+}
+
+export default function HomePageClient({ filters: initialFilters, items }: HomePageClientProps) {
   const [selectedStamp, setSelectedStamp] = useState<GalleryItem | null>(null);
+  const [filterSelections, setFilterSelections] = useState<Record<string, string[]>>({});
+
+  const filteredItems = useMemo(
+    () => filterItems(items, filterSelections),
+    [items, filterSelections]
+  );
+
+  const dynamicFilters = useMemo(() => {
+    return initialFilters.map((f) => {
+      const itemsMatchingOtherFilters = filterItems(items, filterSelections, f.label);
+      const availableValues = new Set<string>();
+      for (const item of itemsMatchingOtherFilters) {
+        const val = getItemValue(item, f.label);
+        if (val) availableValues.add(val);
+      }
+      return {
+        label: f.label,
+        items: f.items.filter((v) => availableValues.has(v)),
+      };
+    });
+  }, [initialFilters, items, filterSelections]);
+
+  const selectedIndex = selectedStamp
+    ? filteredItems.findIndex((i) => i.id === selectedStamp.id)
+    : -1;
+
+  const prevStamp = selectedIndex > 0 ? filteredItems[selectedIndex - 1] : undefined;
+  const nextStamp = selectedIndex >= 0 && selectedIndex < filteredItems.length - 1
+    ? filteredItems[selectedIndex + 1]
+    : undefined;
+
+  const goToPrevious = useCallback(() => {
+    if (prevStamp) setSelectedStamp(prevStamp);
+  }, [prevStamp]);
+
+  const goToNext = useCallback(() => {
+    if (nextStamp) setSelectedStamp(nextStamp);
+  }, [nextStamp]);
 
   return (
     <>
-      <SiteHeader filters={filters} />
-      <StampGallery items={items} onStampClick={setSelectedStamp} />
+      <SiteHeader filters={dynamicFilters} onFilterChange={setFilterSelections} />
+      <StampGallery items={filteredItems} onStampClick={setSelectedStamp} />
+      <BackToTop />
       {selectedStamp && (
         <StampModal
-          key={selectedStamp.id}
           open
           onClose={() => setSelectedStamp(null)}
           imageSrc={selectedStamp.largeSrc}
@@ -52,6 +112,10 @@ export default function HomePageClient({ filters, items }: HomePageClientProps) 
             ...(selectedStamp.collection ? [{ label: "Collection", value: selectedStamp.collection }] : []),
           ]}
           description={selectedStamp.description}
+          previousStamp={prevStamp ? { thumbnailSrc: prevStamp.thumbnailSrc, alt: prevStamp.alt } : undefined}
+          nextStamp={nextStamp ? { thumbnailSrc: nextStamp.thumbnailSrc, alt: nextStamp.alt } : undefined}
+          onPrevious={prevStamp ? goToPrevious : undefined}
+          onNext={nextStamp ? goToNext : undefined}
         />
       )}
     </>

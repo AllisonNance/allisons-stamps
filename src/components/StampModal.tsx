@@ -1,16 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import CollectionBlock from "./CollectionBlock";
 
 interface StampDetail {
   label: string;
   value: string;
 }
 
-interface CollectionItem {
-  id: string;
-  src: string;
+interface NavStamp {
+  thumbnailSrc: string;
   alt: string;
 }
 
@@ -22,10 +20,76 @@ interface StampModalProps {
   title: string;
   details: StampDetail[];
   description?: string;
-  collection?: {
-    title: string;
-    items: CollectionItem[];
-  };
+  previousStamp?: NavStamp;
+  nextStamp?: NavStamp;
+  onPrevious?: () => void;
+  onNext?: () => void;
+}
+
+function NavButton({
+  direction,
+  stamp,
+  onClick,
+}: {
+  direction: "previous" | "next";
+  stamp: NavStamp;
+  onClick: () => void;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const isPrev = direction === "previous";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        color: "#ffffff",
+        padding: 0,
+        flexDirection: isPrev ? "row" : "row-reverse",
+      }}
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        style={{ transform: isPrev ? "none" : "rotate(180deg)", flexShrink: 0 }}
+      >
+        <path
+          d="M10 12L6 8L10 4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <span style={{
+        fontSize: 14,
+        flexShrink: 0,
+        textDecoration: hovered ? "underline" : "none",
+      }}>
+        {isPrev ? "Previous" : "Next"}
+      </span>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={stamp.thumbnailSrc}
+        alt={stamp.alt}
+        style={{
+          width: 50,
+          height: "auto",
+          display: "block",
+        }}
+      />
+    </button>
+  );
 }
 
 export default function StampModal({
@@ -36,7 +100,10 @@ export default function StampModal({
   title,
   details,
   description,
-  collection,
+  previousStamp,
+  nextStamp,
+  onPrevious,
+  onNext,
 }: StampModalProps) {
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== "undefined" ? window.matchMedia("(min-width: 1024px)").matches : false
@@ -71,10 +138,12 @@ export default function StampModal({
     if (!open) return;
     function handleKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft" && onPrevious) onPrevious();
+      if (e.key === "ArrowRight" && onNext) onNext();
     }
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [open, onClose]);
+  }, [open, onClose, onPrevious, onNext]);
 
   const updateDescScroll = useCallback(() => {
     const el = descRef.current;
@@ -133,6 +202,8 @@ export default function StampModal({
     <button
       type="button"
       onClick={onClose}
+      onMouseEnter={(e) => e.currentTarget.style.background = "rgb(55, 55, 55)"}
+      onMouseLeave={(e) => e.currentTarget.style.background = "rgba(50, 48, 40, 0.6)"}
       style={{
         position: "absolute",
         top: 16,
@@ -143,6 +214,7 @@ export default function StampModal({
         color: "#ffffff",
         zIndex: 2,
         padding: 8,
+        transition: "background 0.15s ease",
       }}
       aria-label="Close"
     >
@@ -156,6 +228,25 @@ export default function StampModal({
       </svg>
     </button>
   );
+
+  const navBar = (previousStamp || nextStamp) ? (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexShrink: 0,
+        paddingTop: 16,
+      }}
+    >
+      <div>{previousStamp && onPrevious && (
+        <NavButton direction="previous" stamp={previousStamp} onClick={onPrevious} />
+      )}</div>
+      <div>{nextStamp && onNext && (
+        <NavButton direction="next" stamp={nextStamp} onClick={onNext} />
+      )}</div>
+    </div>
+  ) : null;
 
   if (isDesktop) {
     return (
@@ -246,7 +337,7 @@ export default function StampModal({
                 display: "flex",
                 flexDirection: "column",
                 gap: 16,
-                marginBottom: 24,
+                marginBottom: 40,
                 flexShrink: 0,
                 backgroundColor: "rgb(55, 55, 55)",
                 padding: 24,
@@ -282,7 +373,7 @@ export default function StampModal({
                     lineHeight: 1.7,
                     opacity: 0.85,
                     overflowY: "auto",
-                    paddingRight: descHasOverflow ? 16 : 0,
+                    paddingRight: descHasOverflow ? 40 : 0,
                   }}
                 >
                   <style>{`
@@ -337,15 +428,7 @@ export default function StampModal({
               </div>
             )}
 
-            {/* Collection — always visible at bottom */}
-            {collection && (
-              <div style={{ flexShrink: 0 }}>
-                <CollectionBlock
-                  title={collection.title}
-                  items={collection.items}
-                />
-              </div>
-            )}
+            {navBar}
           </div>
         </div>
       </div>
@@ -353,6 +436,37 @@ export default function StampModal({
   }
 
   // Mobile / Tablet
+  const mobileCloseButton = (
+    <button
+      type="button"
+      onClick={onClose}
+      onMouseEnter={(e) => e.currentTarget.style.background = "rgb(55, 55, 55)"}
+      onMouseLeave={(e) => e.currentTarget.style.background = "rgba(50, 48, 40, 0.6)"}
+      style={{
+        position: "fixed",
+        top: 16,
+        right: 16,
+        background: "rgba(50, 48, 40, 0.6)",
+        border: "none",
+        cursor: "pointer",
+        color: "#ffffff",
+        zIndex: 1002,
+        padding: 8,
+        transition: "background 0.15s ease",
+      }}
+      aria-label="Close"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M18 6L6 18M6 6l12 12"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      </svg>
+    </button>
+  );
+
   return (
     <div
       style={{
@@ -364,7 +478,7 @@ export default function StampModal({
         color: "#ffffff",
       }}
     >
-      {closeButton}
+      {mobileCloseButton}
 
       {/* Image — flush top/left/right */}
       <div
@@ -399,7 +513,7 @@ export default function StampModal({
           {title}
         </h1>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24, backgroundColor: "rgb(55, 55, 55)", padding: 16 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 24, backgroundColor: "rgb(55, 55, 55)", padding: 16 }}>
           {details.map((d) => (
             <div key={d.label} style={{ fontSize: "1.15rem", lineHeight: 1.5 }}>
               <span style={{ fontWeight: 600 }}>{d.label}:</span>{" "}
@@ -423,12 +537,7 @@ export default function StampModal({
           </div>
         )}
 
-        {collection && (
-          <CollectionBlock
-            title={collection.title}
-            items={collection.items}
-          />
-        )}
+        {navBar}
       </div>
     </div>
   );

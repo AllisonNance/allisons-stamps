@@ -108,6 +108,7 @@ export default function StampModal({
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== "undefined" ? window.matchMedia("(min-width: 1024px)").matches : false
   );
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
   const descRef = useRef<HTMLDivElement>(null);
   const descTrackRef = useRef<HTMLDivElement>(null);
   const [descScrollProgress, setDescScrollProgress] = useState(0);
@@ -133,6 +134,12 @@ export default function StampModal({
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  useEffect(() => {
+    if (open && mobileScrollRef.current) {
+      mobileScrollRef.current.scrollTop = 0;
+    }
+  }, [open, title]);
 
   useEffect(() => {
     if (!open) return;
@@ -469,6 +476,7 @@ export default function StampModal({
 
   return (
     <div
+      ref={mobileScrollRef}
       style={{
         position: "fixed",
         inset: 0,

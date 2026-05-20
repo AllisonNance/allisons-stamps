@@ -10,7 +10,7 @@ export default async function HomePage() {
   const collections = await getAllCollections();
 
   const countries = [...new Set(stamps.map((s) => s.country).filter(Boolean))] as string[];
-  const years = [...new Set(stamps.map((s) => s.year).filter(Boolean))].sort((a, b) => (b ?? 0) - (a ?? 0)).map(String);
+  const years = [...new Set(stamps.map((s) => s.year).filter((y): y is number => y != null))].sort((a, b) => b - a).map(String);
 
   const filters = [
     { label: "Country", items: countries },

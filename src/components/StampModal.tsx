@@ -166,6 +166,7 @@ export default function StampModal({
     if (!open || !description) return;
     const el = descRef.current;
     if (!el) return;
+    el.scrollTop = 0;
     const raf = requestAnimationFrame(() => requestAnimationFrame(() => updateDescScroll()));
     el.addEventListener("scroll", updateDescScroll);
     const observer = new ResizeObserver(() => updateDescScroll());

@@ -28,10 +28,11 @@ export default function StampThumbnail({
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const showEffect = isDesktop ? hovered : hovered;
+  const showEffect = hovered;
 
   return (
     <div
+      data-stamp-thumb
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onTouchStart={() => setHovered(true)}
@@ -46,12 +47,13 @@ export default function StampThumbnail({
       <img
         src={src}
         alt={alt}
+        data-stamp-img
         style={{
           width: "100%",
           height: "auto",
           display: "block",
-          WebkitMaskImage: showEffect ? STAMP_MASK : "none",
-          maskImage: showEffect ? STAMP_MASK : "none",
+          WebkitMaskImage: showEffect ? STAMP_MASK : undefined,
+          maskImage: showEffect ? STAMP_MASK : undefined,
           WebkitMaskSize: "100% 100%",
           maskSize: "100% 100%",
           WebkitMaskRepeat: "no-repeat",

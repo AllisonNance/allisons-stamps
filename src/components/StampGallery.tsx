@@ -54,12 +54,25 @@ export default function StampGallery({
           }
         `}</style>
         {pageItems.map((item) => (
-          <div key={item.id} onClick={() => onStampClick?.(item)}>
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => onStampClick?.(item)}
+            aria-label={`View ${item.name}`}
+            style={{
+              background: "none",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              textAlign: "left",
+              width: "100%",
+            }}
+          >
             <StampThumbnail
               src={item.thumbnailSrc}
               alt={item.alt}
             />
-          </div>
+          </button>
         ))}
       </div>
 

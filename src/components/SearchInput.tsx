@@ -28,6 +28,7 @@ export default function SearchInput({
         height="20"
         viewBox="0 0 20 20"
         fill="none"
+        aria-hidden="true"
         style={{ flexShrink: 0 }}
       >
         <circle
@@ -49,6 +50,7 @@ export default function SearchInput({
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
         placeholder={placeholder}
+        aria-label="Search"
         style={{
           flex: 1,
           border: "none",

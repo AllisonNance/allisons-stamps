@@ -22,6 +22,7 @@ export default function FilterDropdown({
   const [search, setSearch] = useState("");
   const [hoverLine, setHoverLine] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const valid = checked.filter((c) => items.includes(c));
@@ -48,6 +49,14 @@ export default function FilterDropdown({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Escape" && open) {
+      e.stopPropagation();
+      setOpen(false);
+      buttonRef.current?.focus();
+    }
+  }
+
   function handleChange(item: string, isChecked: boolean) {
     const next = isChecked
       ? [...checked, item]
@@ -62,10 +71,13 @@ export default function FilterDropdown({
   }
 
   return (
-    <div ref={ref} style={{ position: "relative", display: "inline-block" }}>
+    <div ref={ref} style={{ position: "relative", display: "inline-block" }} onKeyDown={handleKeyDown}>
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls={`filter-panel-${label.toLowerCase().replace(/\s+/g, "-")}`}
         style={{
           display: "inline-flex",
           alignItems: "center",
@@ -75,7 +87,6 @@ export default function FilterDropdown({
           color: "#5E5A4B",
           border: "none",
           cursor: "pointer",
-          outline: "none",
         }}
         onMouseEnter={() => setHoverLine(true)}
         onMouseLeave={() => setHoverLine(false)}
@@ -114,6 +125,7 @@ export default function FilterDropdown({
           height="16"
           viewBox="0 0 12 12"
           fill="none"
+          aria-hidden="true"
           style={{
             transition: "transform 0.15s",
             transform: open ? "rotate(180deg)" : "rotate(0deg)",
@@ -132,6 +144,9 @@ export default function FilterDropdown({
 
       {open && (
         <div
+          id={`filter-panel-${label.toLowerCase().replace(/\s+/g, "-")}`}
+          role="group"
+          aria-label={`${label} filter options`}
           style={{
             position: "absolute",
             top: "100%",

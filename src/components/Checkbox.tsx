@@ -18,6 +18,12 @@ export default function Checkbox({
           type="checkbox"
           checked={checked}
           onChange={(e) => onChange?.(e.target.checked)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              onChange?.(!checked);
+            }
+          }}
           className="peer"
           style={{
             position: "absolute",

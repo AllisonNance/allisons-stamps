@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Checkbox from "./Checkbox";
 import SearchInput from "./SearchInput";
 
@@ -32,6 +32,7 @@ function AccordionSection({
   const [expanded, setExpanded] = useState(false);
   const [search, setSearch] = useState("");
 
+  const panelId = `mobile-filter-${label.toLowerCase().replace(/\s+/g, "-")}`;
   const searchable = items.length > 10;
   const filtered = search
     ? items.filter((item) => item.toLowerCase().includes(search.toLowerCase()))
@@ -51,6 +52,8 @@ function AccordionSection({
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
+        aria-controls={panelId}
         style={{
           display: "flex",
           alignItems: "center",
@@ -89,6 +92,7 @@ function AccordionSection({
           height="16"
           viewBox="0 0 12 12"
           fill="none"
+          aria-hidden="true"
           style={{
             transition: "transform 0.15s",
             transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
@@ -105,7 +109,7 @@ function AccordionSection({
       </button>
 
       {expanded && (
-        <div style={{ paddingBottom: 16 }}>
+        <div id={panelId} role="group" aria-label={`${label} options`} style={{ paddingBottom: 16 }}>
           {searchable && (
             <div style={{ marginBottom: 12 }}>
               <SearchInput placeholder="" value={search} onChange={setSearch} />
@@ -148,6 +152,7 @@ export default function MobileFilterMenu({
   onClearAll,
 }: MobileFilterMenuProps) {
   const hasAnySelected = Object.values(selections).some((s) => s.length > 0);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (open) {
@@ -160,10 +165,31 @@ export default function MobileFilterMenu({
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [open, onClose]);
+
+  useEffect(() => {
+    if (!open || !menuRef.current) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const closeBtn = menuRef.current.querySelector<HTMLElement>("[aria-label='Close filters']");
+    closeBtn?.focus();
+    return () => { previouslyFocused?.focus(); };
+  }, [open]);
+
   if (!open) return null;
 
   return (
     <div
+      ref={menuRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Filters"
       style={{
         position: "fixed",
         inset: 0,
@@ -197,7 +223,7 @@ export default function MobileFilterMenu({
           }}
           aria-label="Close filters"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
               d="M18 6L6 18M6 6l12 12"
               stroke="currentColor"

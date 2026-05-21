@@ -2,6 +2,47 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 
+function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean) {
+  useEffect(() => {
+    if (!active || !ref.current) return;
+    const root = ref.current;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
+    const focusableSelector =
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
+    function getFocusable() {
+      return Array.from(root.querySelectorAll<HTMLElement>(focusableSelector));
+    }
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    requestAnimationFrame(() => {
+      const focusable = getFocusable();
+      if (focusable.length > 0) focusable[0].focus();
+    });
+
+    root.addEventListener("keydown", handleKeyDown);
+    return () => {
+      root.removeEventListener("keydown", handleKeyDown);
+      previouslyFocused?.focus();
+    };
+  }, [active, ref]);
+}
+
 interface StampDetail {
   label: string;
   value: string;
@@ -44,6 +85,7 @@ function NavButton({
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      aria-label={isPrev ? "Previous stamp" : "Next stamp"}
       style={{
         display: "flex",
         alignItems: "center",
@@ -61,6 +103,7 @@ function NavButton({
         height="16"
         viewBox="0 0 16 16"
         fill="none"
+        aria-hidden="true"
         style={{ transform: isPrev ? "none" : "rotate(180deg)", flexShrink: 0 }}
       >
         <path
@@ -108,6 +151,7 @@ export default function StampModal({
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== "undefined" ? window.matchMedia("(min-width: 1024px)").matches : false
   );
+  const modalRef = useRef<HTMLDivElement>(null);
   const mobileScrollRef = useRef<HTMLDivElement>(null);
   const descRef = useRef<HTMLDivElement>(null);
   const descTrackRef = useRef<HTMLDivElement>(null);
@@ -204,6 +248,8 @@ export default function StampModal({
     };
   }, [descDragging]);
 
+  useFocusTrap(modalRef, open);
+
   if (!open) return null;
 
   const closeButton = (
@@ -226,7 +272,7 @@ export default function StampModal({
       }}
       aria-label="Close"
     >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path
           d="M18 6L6 18M6 6l12 12"
           stroke="currentColor"
@@ -259,6 +305,10 @@ export default function StampModal({
   if (isDesktop) {
     return (
       <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="stamp-modal-title"
         style={{
           position: "fixed",
           inset: 0,
@@ -275,6 +325,7 @@ export default function StampModal({
             backgroundColor: "rgba(0, 0, 0, 0.85)",
           }}
           onClick={onClose}
+          aria-hidden="true"
         />
 
         {closeButton}
@@ -330,6 +381,7 @@ export default function StampModal({
             }}
           >
             <h1
+              id="stamp-modal-title"
               style={{
                 fontSize: "2.5rem",
                 fontWeight: 300,
@@ -463,7 +515,7 @@ export default function StampModal({
       }}
       aria-label="Close"
     >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path
           d="M18 6L6 18M6 6l12 12"
           stroke="currentColor"
@@ -476,7 +528,13 @@ export default function StampModal({
 
   return (
     <div
-      ref={mobileScrollRef}
+      ref={(node) => {
+        mobileScrollRef.current = node;
+        (modalRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="stamp-modal-title-mobile"
       style={{
         position: "fixed",
         inset: 0,
@@ -511,6 +569,7 @@ export default function StampModal({
 
       <div style={{ padding: "24px 16px 40px" }}>
         <h1
+          id="stamp-modal-title-mobile"
           style={{
             fontSize: 36,
             fontWeight: 300,

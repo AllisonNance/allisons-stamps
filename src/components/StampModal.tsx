@@ -350,7 +350,7 @@ export default function StampModal({
               }}
             >
               {details.map((d) => (
-                <div key={d.label} style={{ fontSize: "1.15rem", lineHeight: 1.5 }}>
+                <div key={d.label} style={{ fontSize: "1rem", lineHeight: 1.5 }}>
                   <span style={{ fontWeight: 600 }}>{d.label}:</span>{" "}
                   <span style={{ opacity: 0.85 }}>{d.value}</span>
                 </div>
@@ -375,8 +375,8 @@ export default function StampModal({
                   style={{
                     position: "absolute",
                     inset: 0,
-                    fontSize: "1rem",
-                    lineHeight: 1.7,
+                    fontSize: "1.15rem",
+                    lineHeight: "1.85rem",
                     opacity: 0.85,
                     overflowY: "auto",
                     paddingRight: descHasOverflow ? 40 : 0,
@@ -522,7 +522,7 @@ export default function StampModal({
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 24 }}>
           {details.map((d) => (
-            <div key={d.label} style={{ fontSize: "1.15rem", lineHeight: 1.5 }}>
+            <div key={d.label} style={{ fontSize: "1rem", lineHeight: 1.5 }}>
               <span style={{ fontWeight: 600 }}>{d.label}:</span>{" "}
               <span style={{ opacity: 0.85 }}>{d.value}</span>
             </div>
@@ -532,8 +532,8 @@ export default function StampModal({
         {description && (
           <div
             style={{
-              fontSize: "1rem",
-              lineHeight: 1.7,
+              fontSize: "1.15rem",
+              lineHeight: "1.85rem",
               opacity: 0.85,
               marginBottom: 32,
             }}

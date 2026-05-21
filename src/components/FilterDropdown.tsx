@@ -20,6 +20,7 @@ export default function FilterDropdown({
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState<string[]>(selected);
   const [search, setSearch] = useState("");
+  const [hoverLine, setHoverLine] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -73,20 +74,22 @@ export default function FilterDropdown({
           background: "var(--background)",
           color: "#5E5A4B",
           border: "none",
-          borderBottom: open
-            ? "2px solid #8E8A7C"
-            : "2px solid transparent",
           cursor: "pointer",
-          transition: "border-color 0.15s",
           outline: "none",
         }}
-        onMouseEnter={(e) => {
-          if (!open) e.currentTarget.style.borderBottom = "2px solid #8E8A7C";
-        }}
-        onMouseLeave={(e) => {
-          if (!open) e.currentTarget.style.borderBottom = "2px solid transparent";
-        }}
+        onMouseEnter={() => setHoverLine(true)}
+        onMouseLeave={() => setHoverLine(false)}
       >
+        <span style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          borderBottom: (open || hoverLine)
+            ? "2px solid #8E8A7C"
+            : "2px solid transparent",
+          paddingBottom: 4,
+          transition: "border-color 0.15s",
+        }}>
         <span style={{ fontSize: 18, fontWeight: 500 }}>{label}</span>
         {count !== undefined && (
           <span
@@ -100,6 +103,7 @@ export default function FilterDropdown({
               color: "#FFFFFF",
               fontSize: 10,
               fontWeight: 600,
+              borderRadius: 4,
             }}
           >
             {count}
@@ -123,6 +127,7 @@ export default function FilterDropdown({
             strokeLinejoin="round"
           />
         </svg>
+        </span>
       </button>
 
       {open && (

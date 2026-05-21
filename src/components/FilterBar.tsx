@@ -54,6 +54,8 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
         <button
           type="button"
           onClick={handleClearAll}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#DEDEDE"}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#EBEBEB"}
           style={{
             padding: "8px 16px",
             fontSize: 16,
@@ -61,6 +63,8 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
             backgroundColor: "#EBEBEB",
             border: "none",
             cursor: "pointer",
+            borderRadius: 4,
+            transition: "background-color 0.15s ease",
           }}
         >
           Clear Filters

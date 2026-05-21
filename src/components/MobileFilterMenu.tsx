@@ -77,6 +77,7 @@ function AccordionSection({
                 color: "#FFFFFF",
                 fontSize: 10,
                 fontWeight: 600,
+                borderRadius: 4,
               }}
             >
               {count}
@@ -236,6 +237,8 @@ export default function MobileFilterMenu({
           <button
             type="button"
             onClick={onClearAll}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#DEDEDE"}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#EBEBEB"}
             style={{
               width: "100%",
               padding: "14px 16px",
@@ -244,6 +247,8 @@ export default function MobileFilterMenu({
               backgroundColor: "#EBEBEB",
               border: "none",
               cursor: "pointer",
+              borderRadius: 4,
+              transition: "background-color 0.15s ease",
             }}
           >
             Clear Filters

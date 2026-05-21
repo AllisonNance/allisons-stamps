@@ -12,7 +12,7 @@ export default function Checkbox({
   onChange,
 }: CheckboxProps) {
   return (
-    <label className="flex items-center gap-3 cursor-pointer py-2 px-1">
+    <label className="flex items-center gap-3 cursor-pointer py-2 px-1 group">
       <span className="relative flex h-5 w-5 shrink-0">
         <input
           type="checkbox"
@@ -37,7 +37,7 @@ export default function Checkbox({
             transition-colors
             ${checked
               ? "border-[var(--color-border)] bg-[var(--color-icon)]"
-              : "border-[var(--color-border)] bg-white"
+              : "border-[var(--color-border)] bg-white group-hover:bg-[rgba(153,144,112,0.25)]"
             }
             peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-border)] peer-focus-visible:ring-offset-1
           `}

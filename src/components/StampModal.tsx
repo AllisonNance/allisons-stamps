@@ -219,7 +219,7 @@ export default function StampModal({
         border: "none",
         cursor: "pointer",
         color: "#ffffff",
-        zIndex: 2,
+        zIndex: 10,
         padding: 8,
         transition: "background 0.15s ease",
       }}
@@ -276,6 +276,8 @@ export default function StampModal({
           onClick={onClose}
         />
 
+        {closeButton}
+
         <div
           style={{
             position: "relative",
@@ -288,7 +290,6 @@ export default function StampModal({
             overflow: "hidden",
           }}
         >
-          {closeButton}
 
           {/* Image — centered vertically */}
           <div
@@ -318,7 +319,7 @@ export default function StampModal({
           {/* Right panel — centered vertically */}
           <div
             style={{
-              flex: "0 1 800px",
+              flex: "0 1 675px",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
@@ -343,11 +344,9 @@ export default function StampModal({
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 16,
+                gap: 8,
                 marginBottom: 40,
                 flexShrink: 0,
-                backgroundColor: "rgb(55, 55, 55)",
-                padding: 24,
               }}
             >
               {details.map((d) => (
@@ -521,7 +520,7 @@ export default function StampModal({
           {title}
         </h1>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 24, backgroundColor: "rgb(55, 55, 55)", padding: 16 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 24 }}>
           {details.map((d) => (
             <div key={d.label} style={{ fontSize: "1.15rem", lineHeight: 1.5 }}>
               <span style={{ fontWeight: 600 }}>{d.label}:</span>{" "}

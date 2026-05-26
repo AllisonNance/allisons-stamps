@@ -23,7 +23,7 @@ export default function SiteFooter() {
         padding: isDesktop ? 32 : 16,
       }}
     >
-      <Logo height={isDesktop ? 140 : 80} />
+      <Logo height={isDesktop ? 110 : 80} />
       <div style={{ textAlign: "right" }}>
         <a
           href="mailto:allison@availta.com"

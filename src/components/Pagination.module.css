@@ -1,0 +1,59 @@
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.navLarge {
+  gap: 4px;
+}
+
+.navSmall {
+  gap: 0;
+}
+
+.baseButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.arrowButton {
+  composes: baseButton;
+  color: #8E8A7C;
+}
+
+.pageButton {
+  composes: baseButton;
+  color: #5E5A4B;
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: text-decoration 0.15s;
+}
+
+.pageButton:hover {
+  text-decoration: underline;
+}
+
+.currentPage {
+  composes: baseButton;
+  width: 44px;
+  height: 49px;
+  cursor: default;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.currentPage:hover {
+  text-decoration: none;
+}

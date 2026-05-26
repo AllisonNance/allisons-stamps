@@ -1,0 +1,52 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: var(--background);
+  color: #5E5A4B;
+  border: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  outline: none;
+  cursor: pointer;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-border);
+  outline-offset: 2px;
+}
+
+.buttonSelected {
+  border-bottom-color: #8E8A7C;
+}
+
+.button:not(.buttonSelected):hover {
+  border-bottom-color: #8E8A7C;
+}
+
+.label {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.badge {
+  display: flex;
+  height: 20px;
+  width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: var(--color-icon);
+  color: var(--color-text-reverse);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.chevron {
+  transition: transform 0.15s;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}

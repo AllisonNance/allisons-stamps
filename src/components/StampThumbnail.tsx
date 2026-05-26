@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import styles from "./StampThumbnail.module.css";
 
 interface StampThumbnailProps {
   src: string;
@@ -33,31 +34,21 @@ export default function StampThumbnail({
   return (
     <div
       data-stamp-thumb
+      className={styles.wrapper}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onTouchStart={() => setHovered(true)}
       onTouchEnd={() => setTimeout(() => setHovered(false), 300)}
-      style={{
-        position: "relative",
-        width: "100%",
-        cursor: "pointer",
-      }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt={alt}
         data-stamp-img
+        className={styles.image}
         style={{
-          width: "100%",
-          height: "auto",
-          display: "block",
           WebkitMaskImage: showEffect ? STAMP_MASK : undefined,
           maskImage: showEffect ? STAMP_MASK : undefined,
-          WebkitMaskSize: "100% 100%",
-          maskSize: "100% 100%",
-          WebkitMaskRepeat: "no-repeat",
-          maskRepeat: "no-repeat",
         }}
       />
     </div>

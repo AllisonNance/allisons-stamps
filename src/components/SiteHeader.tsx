@@ -5,6 +5,7 @@ import Logo from "./Logo";
 import FilterBar from "./FilterBar";
 import MobileFilterMenu from "./MobileFilterMenu";
 import { SparklesIcon, type SparklesIconHandle } from "./SparklesIcon";
+import styles from "./SiteHeader.module.css";
 
 interface FilterConfig {
   label: string;
@@ -65,49 +66,24 @@ export default function SiteHeader({ filters, onFilterChange, onShuffle }: SiteH
 
   if (isDesktop) {
     return (
-      <header style={{ background: "var(--background)", padding: 32 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
+      <header className={styles.headerDesktop}>
+        <div className={styles.desktopRow}>
           <Logo height={110} />
           <FilterBar filters={filters} onChange={handleFilterChange} />
-          <div style={{ marginLeft: "auto" }}>
-          <button
-            type="button"
-            onClick={onShuffle}
-            onMouseEnter={(e) => {
-              (e.currentTarget.querySelector("[data-underline]") as HTMLElement).style.borderColor = "#8E8A7C";
-              sparkleRef.current?.startAnimation();
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget.querySelector("[data-underline]") as HTMLElement).style.borderColor = "transparent";
-              sparkleRef.current?.stopAnimation();
-            }}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "8px 12px",
-              background: "var(--background)",
-              color: "var(--color-text)",
-              border: "none",
-              cursor: "pointer",
-            }}
-            aria-label="Surprise me"
-          >
-            <span
-              data-underline
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                borderBottom: "2px solid transparent",
-                paddingBottom: 4,
-                transition: "border-color 0.15s",
-              }}
+          <div className={styles.surpriseWrap}>
+            <button
+              type="button"
+              onClick={onShuffle}
+              onMouseEnter={() => sparkleRef.current?.startAnimation()}
+              onMouseLeave={() => sparkleRef.current?.stopAnimation()}
+              className={styles.surpriseButton}
+              aria-label="Surprise me"
             >
-              <SparklesIcon ref={sparkleRef} size={22} />
-              <span style={{ fontSize: 16, fontWeight: 300 }}>Surprise Me</span>
-            </span>
-          </button>
+              <span className={styles.surpriseInner}>
+                <SparklesIcon ref={sparkleRef} size={22} />
+                <span className={styles.surpriseLabel}>Surprise Me</span>
+              </span>
+            </button>
           </div>
         </div>
       </header>
@@ -116,22 +92,12 @@ export default function SiteHeader({ filters, onFilterChange, onShuffle }: SiteH
 
   return (
     <>
-      <header style={{ background: "var(--background)", padding: 16, position: "relative" }}>
-        <div style={{ position: "absolute", top: 16, right: 16, display: "flex", alignItems: "center", gap: 20 }}>
+      <header className={styles.headerMobile}>
+        <div className={styles.mobileActions}>
           <button
             type="button"
             onClick={onShuffle}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-              width: 28,
-              height: 28,
-            }}
+            className={styles.iconButton}
             aria-label="Surprise me"
           >
             <SparklesIcon ref={mobileSparkleRef} size={26} />
@@ -139,18 +105,7 @@ export default function SiteHeader({ filters, onFilterChange, onShuffle }: SiteH
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-              width: 28,
-              height: 28,
-              color: hasAnySelected ? "#999070" : "#5E5A4B",
-            }}
+            className={`${styles.iconButton} ${hasAnySelected ? styles.filterIconActive : styles.filterIconDefault}`}
             aria-label="Open filters"
           >
             <svg

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Checkbox from "./Checkbox";
 import SearchInput from "./SearchInput";
+import styles from "./CheckboxGroup.module.css";
 
 interface CheckboxGroupProps {
   label?: string;
@@ -36,11 +37,9 @@ export default function CheckboxGroup({
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className={styles.wrapper}>
       {label && (
-        <h3 style={{ fontSize: 24, color: "#8E8A7C", fontWeight: 400 }}>
-          {label}
-        </h3>
+        <h3 className={styles.heading}>{label}</h3>
       )}
       {searchable && (
         <SearchInput
@@ -49,15 +48,7 @@ export default function CheckboxGroup({
           onChange={setSearch}
         />
       )}
-      <div
-        className="flex flex-col gap-1"
-        style={scrollable ? {
-          maxHeight: 320,
-          overflowY: "auto",
-          scrollbarWidth: "thin",
-          scrollbarColor: "#5E5A4B transparent",
-        } : undefined}
-      >
+      <div className={`${styles.list} ${scrollable ? styles.listScrollable : ""}`}>
         {filtered.map((item) => (
           <Checkbox
             key={item}
@@ -67,9 +58,7 @@ export default function CheckboxGroup({
           />
         ))}
         {filtered.length === 0 && (
-          <p style={{ fontSize: 14, color: "#8E8A7C", padding: "8px 4px" }}>
-            No matches
-          </p>
+          <p className={styles.empty}>No matches</p>
         )}
       </div>
     </div>

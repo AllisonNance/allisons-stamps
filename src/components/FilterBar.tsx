@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import FilterDropdown from "./FilterDropdown";
+import styles from "./FilterBar.module.css";
 
 interface FilterConfig {
   label: string;
@@ -35,13 +36,7 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 32,
-      }}
-    >
+    <div className={styles.wrapper}>
       {filters.map((filter) => (
         <FilterDropdown
           key={`${filter.label}-${resetKey}`}
@@ -54,18 +49,7 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
         <button
           type="button"
           onClick={handleClearAll}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#DEDEDE"}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#EBEBEB"}
-          style={{
-            padding: "8px 16px",
-            fontSize: 16,
-            color: "var(--color-text)",
-            backgroundColor: "#EBEBEB",
-            border: "none",
-            cursor: "pointer",
-            borderRadius: 4,
-            transition: "background-color 0.15s ease",
-          }}
+          className={styles.clearButton}
         >
           Clear Filters
         </button>

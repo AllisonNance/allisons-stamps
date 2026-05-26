@@ -1,0 +1,26 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 16px;
+}
+
+.footerDesktop {
+  padding: 32px;
+}
+
+.right {
+  text-align: right;
+}
+
+.link {
+  color: var(--color-text);
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.copyright {
+  font-size: 14px;
+  margin: 8px 0 0;
+  color: var(--color-text);
+}

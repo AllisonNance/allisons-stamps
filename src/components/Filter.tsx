@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import styles from "./Filter.module.css";
 
 interface FilterProps {
   label: string;
@@ -27,29 +28,18 @@ export default function Filter({
     <button
       type="button"
       onClick={handleClick}
-      className={`
-        group inline-flex items-center gap-2 px-3 py-2
-        bg-[var(--background)] text-[#5E5A4B]
-        border-b-2 transition-all outline-none
-        focus-visible:ring-2 focus-visible:ring-[var(--color-border)]
-        ${isSelected
-          ? "border-[#8E8A7C]"
-          : "border-transparent hover:border-[#8E8A7C]"
-        }
-      `}
+      className={`${styles.button} ${isSelected ? styles.buttonSelected : ""}`}
     >
-      <span className="text-lg font-medium" style={{ fontSize: 18 }}>{label}</span>
+      <span className={styles.label}>{label}</span>
       {count !== undefined && (
-        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-icon)] text-[10px] font-semibold text-[var(--color-text-reverse)]">
-          {count}
-        </span>
+        <span className={styles.badge}>{count}</span>
       )}
       <svg
         width="16"
         height="16"
         viewBox="0 0 12 12"
         fill="none"
-        className={`transition-transform ${isSelected ? "rotate-180" : ""}`}
+        className={`${styles.chevron} ${isSelected ? styles.chevronOpen : ""}`}
       >
         <path
           d="M2.5 4.5L6 8L9.5 4.5"

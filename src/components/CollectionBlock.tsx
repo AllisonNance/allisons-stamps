@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import styles from "./CollectionBlock.module.css";
 
 interface CollectionItem {
   id: string;
@@ -120,38 +121,19 @@ export default function CollectionBlock({ title, items }: CollectionBlockProps) 
   return (
     <div ref={containerRef}>
       <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 16,
-          marginBottom: isDesktop ? 24 : 16,
-          maxWidth: isCarousel && isDesktop ? fullWidth + ITEM_WIDTH * 0.5 : undefined,
-        }}
+        className={`${styles.header} ${isDesktop ? styles.headerDesktop : styles.headerMobile}`}
+        style={{ maxWidth: isCarousel && isDesktop ? fullWidth + ITEM_WIDTH * 0.5 : undefined }}
       >
-        <h2
-          style={{
-            fontSize: isDesktop ? "1.5rem" : 18,
-            fontWeight: 500,
-            color: "currentColor",
-            margin: 0,
-          }}
-        >
+        <h2 className={`${styles.title} ${isDesktop ? styles.titleDesktop : styles.titleMobile}`}>
           {title}
         </h2>
         {isCarousel && (
-          <div style={{ display: "flex", gap: 12, flexShrink: 0 }}>
+          <div className={styles.arrowGroup}>
             <button
               type="button"
               onClick={() => scrollBy(-1)}
               disabled={!canScrollLeft}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: canScrollLeft ? "pointer" : "default",
-                padding: 4,
-                color: canScrollLeft ? "#C8C4B8" : "#5E5A4B",
-              }}
+              className={`${styles.arrowButton} ${canScrollLeft ? styles.arrowButtonEnabled : styles.arrowButtonDisabled}`}
               aria-label="Scroll left"
             >
               <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
@@ -168,13 +150,7 @@ export default function CollectionBlock({ title, items }: CollectionBlockProps) 
               type="button"
               onClick={() => scrollBy(1)}
               disabled={!canScrollRight}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: canScrollRight ? "pointer" : "default",
-                padding: 4,
-                color: canScrollRight ? "#C8C4B8" : "#5E5A4B",
-              }}
+              className={`${styles.arrowButton} ${canScrollRight ? styles.arrowButtonEnabled : styles.arrowButtonDisabled}`}
               aria-label="Scroll right"
             >
               <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
@@ -197,7 +173,7 @@ export default function CollectionBlock({ title, items }: CollectionBlockProps) 
       >
         <div
           ref={scrollRef}
-          data-collection-scroll
+          className={`${styles.scrollContainer} ${styles.scrollContainerHidden}`}
           onWheel={(e) => {
             if (!isCarousel) return;
             e.preventDefault();
@@ -205,17 +181,10 @@ export default function CollectionBlock({ title, items }: CollectionBlockProps) 
             if (el) el.scrollLeft += e.deltaX || e.deltaY;
           }}
           style={{
-            display: "flex",
-            gap: 0,
             overflowX: isCarousel ? (isDesktop ? "hidden" : "auto") : "visible",
             maxWidth: isCarousel && isDesktop ? fullWidth + ITEM_WIDTH * 0.5 : undefined,
-            WebkitOverflowScrolling: "touch",
           }}
         >
-          <style>{`
-            [data-collection-scroll]::-webkit-scrollbar { display: none; }
-            [data-collection-scroll] { scrollbar-width: none; }
-          `}</style>
           {items.map((item) => (
             <CollectionThumbnail key={item.id} item={item} width={itemWidth} />
           ))}
@@ -224,30 +193,21 @@ export default function CollectionBlock({ title, items }: CollectionBlockProps) 
         {isCarousel && (
           <div
             ref={trackRef}
+            className={styles.scrollTrack}
             onMouseDown={(e) => {
               setDragging(true);
               handleScrollbarDrag(e.clientX);
             }}
             style={{
               width: trackWidth,
-              height: 8,
               backgroundColor: carouselHovered || dragging ? "rgba(94, 90, 75, 0.2)" : "transparent",
-              marginTop: 16,
-              position: "relative",
-              cursor: "pointer",
-              borderRadius: 9999,
-              transition: "background-color 0.2s ease",
             }}
           >
             <div
+              className={styles.scrollThumb}
               style={{
-                position: "absolute",
-                top: 0,
                 left: thumbLeft,
                 width: thumbWidth,
-                height: 8,
-                backgroundColor: "#5E5A4B",
-                borderRadius: 9999,
                 transition: dragging ? "none" : "left 0.1s ease",
               }}
             />
@@ -276,53 +236,34 @@ function CollectionThumbnail({ item, width = ITEM_WIDTH }: { item: CollectionIte
 
   return (
     <div
+      className={styles.thumbWrap}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{
-        position: "relative",
-        width,
-        aspectRatio: "400 / 533",
-        overflow: "hidden",
-        cursor: "pointer",
-        flexShrink: 0,
-      }}
+      style={{ width }}
     >
       {isDesktop && (
         <div
+          className={styles.thumbBorder}
           style={{
-            position: "absolute",
-            inset: 0,
             backgroundImage: STAMP_BORDER,
-            backgroundSize: "100% 100%",
-            backgroundRepeat: "no-repeat",
             opacity: showHover ? 1 : 0,
-            transition: "opacity 0.25s ease",
-            zIndex: 1,
-            pointerEvents: "none",
           }}
         />
       )}
       <div
+        className={styles.thumbImageWrap}
         style={{
-          position: "absolute",
           top: showHover ? "5.1%" : 0,
           left: showHover ? "6.8%" : 0,
           right: showHover ? "5.8%" : 0,
           bottom: showHover ? "5.1%" : 0,
-          transition: "all 0.25s ease",
-          zIndex: 2,
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={item.src}
           alt={item.alt}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            display: "block",
-          }}
+          className={styles.thumbImage}
         />
       </div>
     </div>

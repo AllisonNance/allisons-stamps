@@ -1,0 +1,107 @@
+.wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--background);
+  color: var(--color-text);
+  border: none;
+  cursor: pointer;
+}
+
+.triggerInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 4px;
+  transition: border-color 0.15s;
+}
+
+.triggerInnerActive {
+  border-color: #8E8A7C;
+}
+
+.trigger:hover .triggerInner {
+  border-color: #8E8A7C;
+}
+
+.filterLabel {
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: #999070;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.chevron {
+  transition: transform 0.15s;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 240px;
+  background: #ffffff;
+  border: 1px solid #E9E9E9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panelTitle {
+  font-size: 16px;
+  color: #8E8A7C;
+}
+
+.clearLink {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #5E5A4B;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.scrollList {
+  max-height: 320px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #5E5A4B transparent;
+}
+
+.empty {
+  font-size: 14px;
+  color: #8E8A7C;
+  padding: 8px 4px;
+}

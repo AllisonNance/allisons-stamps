@@ -1,5 +1,7 @@
 "use client";
 
+import styles from "./Checkbox.module.css";
+
 interface CheckboxProps {
   label: string;
   checked?: boolean;
@@ -12,8 +14,8 @@ export default function Checkbox({
   onChange,
 }: CheckboxProps) {
   return (
-    <label className="flex items-center gap-3 cursor-pointer py-2 px-1 group">
-      <span className="relative flex h-5 w-5 shrink-0">
+    <label className={styles.label}>
+      <span className={styles.checkboxWrap}>
         <input
           type="checkbox"
           checked={checked}
@@ -24,30 +26,9 @@ export default function Checkbox({
               onChange?.(!checked);
             }
           }}
-          className="peer"
-          style={{
-            position: "absolute",
-            width: 1,
-            height: 1,
-            padding: 0,
-            margin: -1,
-            overflow: "hidden",
-            clip: "rect(0,0,0,0)",
-            whiteSpace: "nowrap",
-            borderWidth: 0,
-          }}
+          className={styles.hiddenInput}
         />
-        <span
-          className={`
-            flex h-5 w-5 items-center justify-center rounded-sm border
-            transition-colors
-            ${checked
-              ? "border-[var(--color-border)] bg-[var(--color-icon)]"
-              : "border-[var(--color-border)] bg-white group-hover:bg-[rgba(153,144,112,0.25)]"
-            }
-            peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-border)] peer-focus-visible:ring-offset-1
-          `}
-        >
+        <span className={`${styles.box} ${checked ? styles.boxChecked : ""}`}>
           {checked && (
             <svg width="16" height="16" viewBox="0 0 12 12" fill="none">
               <path
@@ -61,9 +42,7 @@ export default function Checkbox({
           )}
         </span>
       </span>
-      <span className="text-[var(--color-text)]" style={{ fontSize: 16 }}>
-        {label}
-      </span>
+      <span className={styles.text}>{label}</span>
     </label>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Logo from "./Logo";
+import styles from "./SiteFooter.module.css";
 
 export default function SiteFooter() {
   const [isDesktop, setIsDesktop] = useState(false);
@@ -15,29 +16,13 @@ export default function SiteFooter() {
   }, []);
 
   return (
-    <footer
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-        padding: isDesktop ? 32 : 16,
-      }}
-    >
+    <footer className={`${styles.footer} ${isDesktop ? styles.footerDesktop : ""}`}>
       <Logo height={isDesktop ? 110 : 80} />
-      <div style={{ textAlign: "right" }}>
-        <a
-          href="mailto:allison@availta.com"
-          style={{
-            color: "var(--color-text)",
-            textDecoration: "underline",
-            fontSize: 14,
-          }}
-        >
+      <div className={styles.right}>
+        <a href="mailto:allison@availta.com" className={styles.link}>
           Get in Touch
         </a>
-        <p style={{ fontSize: 14, margin: "8px 0 0", color: "var(--color-text)" }}>
-          &copy; 2026 Allison Nance
-        </p>
+        <p className={styles.copyright}>&copy; 2026 Allison Nance</p>
       </div>
     </footer>
   );

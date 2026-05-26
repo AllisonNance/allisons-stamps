@@ -1,5 +1,7 @@
 "use client";
 
+import styles from "./SearchInput.module.css";
+
 interface SearchInputProps {
   placeholder?: string;
   value?: string;
@@ -12,24 +14,14 @@ export default function SearchInput({
   onChange,
 }: SearchInputProps) {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
-        border: "1.5px solid #8E8A7C",
-        borderRadius: 0,
-        backgroundColor: "#ffffff",
-        padding: "10px 14px",
-      }}
-    >
+    <div className={styles.wrapper}>
       <svg
         width="20"
         height="20"
         viewBox="0 0 20 20"
         fill="none"
         aria-hidden="true"
-        style={{ flexShrink: 0 }}
+        className={styles.icon}
       >
         <circle
           cx="8.5"
@@ -51,14 +43,7 @@ export default function SearchInput({
         onChange={(e) => onChange?.(e.target.value)}
         placeholder={placeholder}
         aria-label="Search"
-        style={{
-          flex: 1,
-          border: "none",
-          outline: "none",
-          backgroundColor: "transparent",
-          fontSize: 16,
-          color: "#323028",
-        }}
+        className={styles.input}
       />
     </div>
   );

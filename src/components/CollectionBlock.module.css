@@ -1,0 +1,113 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.headerDesktop {
+  margin-bottom: 24px;
+}
+
+.headerMobile {
+  margin-bottom: 16px;
+}
+
+.title {
+  font-weight: 500;
+  color: currentColor;
+  margin: 0;
+}
+
+.titleDesktop {
+  font-size: 1.5rem;
+}
+
+.titleMobile {
+  font-size: 18px;
+}
+
+.arrowGroup {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.arrowButton {
+  background: none;
+  border: none;
+  padding: 4px;
+}
+
+.arrowButtonEnabled {
+  cursor: pointer;
+  color: #C8C4B8;
+}
+
+.arrowButtonDisabled {
+  cursor: default;
+  color: #5E5A4B;
+}
+
+.scrollContainer {
+  display: flex;
+  gap: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollContainerHidden {
+  scrollbar-width: none;
+}
+
+.scrollTrack {
+  height: 8px;
+  margin-top: 16px;
+  position: relative;
+  cursor: pointer;
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+.scrollThumb {
+  position: absolute;
+  top: 0;
+  height: 8px;
+  background-color: #5E5A4B;
+  border-radius: 9999px;
+}
+
+/* Collection Thumbnail */
+.thumbWrap {
+  position: relative;
+  aspect-ratio: 400 / 533;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.thumbBorder {
+  position: absolute;
+  inset: 0;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  transition: opacity 0.25s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.thumbImageWrap {
+  position: absolute;
+  transition: all 0.25s ease;
+  z-index: 2;
+}
+
+.thumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

@@ -1,0 +1,62 @@
+.label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 8px 4px;
+}
+
+.checkboxWrap {
+  position: relative;
+  display: flex;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.hiddenInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.box {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  border: 1px solid var(--color-border);
+  background-color: #ffffff;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.label:hover .box {
+  background-color: rgba(153, 144, 112, 0.25);
+}
+
+.boxChecked {
+  background-color: var(--color-icon);
+}
+
+.boxChecked,
+.label:hover .boxChecked {
+  background-color: var(--color-icon);
+}
+
+.hiddenInput:focus-visible ~ .box {
+  outline: 2px solid var(--color-border);
+  outline-offset: 1px;
+}
+
+.text {
+  color: var(--color-text);
+  font-size: 16px;
+}

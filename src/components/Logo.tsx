@@ -1,3 +1,5 @@
+import styles from "./Logo.module.css";
+
 interface LogoProps {
   height?: number;
 }
@@ -8,7 +10,8 @@ export default function Logo({ height = 120 }: LogoProps) {
     <img
       src="/logo.svg"
       alt="Allison's Stamp Collection"
-      style={{ height, width: "auto", display: "block" }}
+      className={styles.logo}
+      style={{ height }}
     />
   );
 }

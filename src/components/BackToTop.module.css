@@ -1,0 +1,25 @@
+.button {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 900;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  width: 59px;
+  height: 60px;
+}
+
+.icon {
+  display: block;
+}
+
+.circle {
+  fill: rgba(255, 255, 255, 0.7);
+  transition: fill 0.15s ease;
+}
+
+.button:hover .circle {
+  fill: rgba(255, 255, 255, 1);
+}

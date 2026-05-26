@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import styles from "./StampModal.module.css";
 
 function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean) {
   useEffect(() => {
@@ -71,34 +72,19 @@ function NavButton({
   direction,
   stamp,
   onClick,
-  color = "#ffffff",
 }: {
   direction: "previous" | "next";
   stamp: NavStamp;
   onClick: () => void;
-  color?: string;
 }) {
-  const [hovered, setHovered] = useState(false);
   const isPrev = direction === "previous";
 
   return (
     <button
       type="button"
       onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       aria-label={isPrev ? "Previous stamp" : "Next stamp"}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-        background: "none",
-        border: "none",
-        cursor: "pointer",
-        color,
-        padding: 0,
-        flexDirection: isPrev ? "row" : "row-reverse",
-      }}
+      className={`${styles.navButton} ${!isPrev ? styles.navButtonReverse : ""}`}
     >
       <svg
         width="16"
@@ -116,22 +102,14 @@ function NavButton({
           strokeLinejoin="round"
         />
       </svg>
-      <span style={{
-        fontSize: 14,
-        flexShrink: 0,
-        textDecoration: hovered ? "underline" : "none",
-      }}>
+      <span className={styles.navLabel}>
         {isPrev ? "Previous" : "Next"}
       </span>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={stamp.thumbnailSrc}
         alt={stamp.alt}
-        style={{
-          width: 50,
-          height: "auto",
-          display: "block",
-        }}
+        className={styles.navThumb}
       />
     </button>
   );
@@ -254,47 +232,8 @@ export default function StampModal({
 
   if (!open) return null;
 
-  const closeButton = (
-    <button
-      type="button"
-      onClick={onClose}
-      onMouseEnter={(e) => e.currentTarget.style.background = "rgb(55, 55, 55)"}
-      onMouseLeave={(e) => e.currentTarget.style.background = "rgba(50, 48, 40, 0.6)"}
-      style={{
-        position: "absolute",
-        top: 16,
-        right: 16,
-        background: "rgba(50, 48, 40, 0.6)",
-        border: "none",
-        cursor: "pointer",
-        color: "#ffffff",
-        zIndex: 10,
-        padding: 8,
-        transition: "background 0.15s ease",
-      }}
-      aria-label="Close"
-    >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path
-          d="M18 6L6 18M6 6l12 12"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-      </svg>
-    </button>
-  );
-
   const navBar = (previousStamp || nextStamp) ? (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexShrink: 0,
-        paddingTop: 16,
-      }}
-    >
+    <div className={styles.navBar}>
       <div>{previousStamp && onPrevious && (
         <NavButton direction="previous" stamp={previousStamp} onClick={onPrevious} />
       )}</div>
@@ -311,105 +250,52 @@ export default function StampModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="stamp-modal-title"
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 1000,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        className={styles.backdrop}
       >
         <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.85)",
-          }}
+          className={styles.overlay}
           onClick={onClose}
           aria-hidden="true"
         />
 
-        {closeButton}
-
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "center",
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "#1a1a1a",
-            zIndex: 1,
-            overflow: "hidden",
-          }}
+        <button
+          type="button"
+          onClick={onClose}
+          className={styles.closeButton}
+          aria-label="Close"
         >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M18 6L6 18M6 6l12 12"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
 
+        <div className={styles.desktopContainer}>
           {/* Image — centered vertically */}
-          <div
-            style={{
-              flexShrink: 0,
-              height: "100%",
-              aspectRatio: "3 / 4",
-              backgroundColor: "#e8e4dc",
-              overflow: "hidden",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <div className={styles.imagePanel}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imageSrc}
               alt={imageAlt}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
+              className={styles.stampImage}
             />
           </div>
 
           {/* Right panel — centered vertically */}
-          <div
-            style={{
-              flex: "0 1 675px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              padding: "72px 40px 40px",
-              color: "#ffffff",
-              overflow: "hidden",
-            }}
-          >
-            <h1
-              id="stamp-modal-title"
-              style={{
-                fontSize: "2.5rem",
-                fontWeight: 300,
-                margin: "0 0 28px",
-                lineHeight: 1.3,
-                flexShrink: 0,
-              }}
-            >
+          <div className={styles.infoPanel}>
+            <h1 id="stamp-modal-title" className={styles.title}>
               {title}
             </h1>
 
-            <dl
-              aria-label="Stamp details"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-                marginBottom: 40,
-                flexShrink: 0,
-                margin: "0 0 40px",
-              }}
-            >
+            <dl aria-label="Stamp details" className={styles.detailsList}>
               {details.map((d) => (
-                <div key={d.label} style={{ fontSize: "1rem", lineHeight: 1.5 }}>
-                  <dt style={{ fontWeight: 600, display: "inline" }}>{d.label}:</dt>{" "}
-                  <dd style={{ opacity: 0.85, display: "inline", margin: 0 }}>{d.value}</dd>
+                <div key={d.label} className={styles.detailRow}>
+                  <dt className={styles.detailLabel}>{d.label}:</dt>{" "}
+                  <dd className={styles.detailValue}>{d.value}</dd>
                 </div>
               ))}
             </dl>
@@ -417,37 +303,20 @@ export default function StampModal({
             {/* Description — custom scrollbar */}
             {description && (
               <div
-                style={{
-                  position: "relative",
-                  marginBottom: 24,
-                  minHeight: 0,
-                  flex: "1 1 0",
-                }}
+                className={styles.descriptionWrap}
                 onMouseEnter={() => setDescHovered(true)}
                 onMouseLeave={() => setDescHovered(false)}
               >
                 <div
                   ref={descRef}
-                  data-desc-scroll
                   tabIndex={0}
                   role="region"
                   aria-label="Stamp description"
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    fontSize: "1.15rem",
-                    lineHeight: "1.85rem",
-                    opacity: 0.85,
-                    overflowY: "auto",
-                    paddingRight: descHasOverflow ? 40 : 0,
-                  }}
+                  className={styles.descriptionScroll}
+                  style={{ paddingRight: descHasOverflow ? 40 : 0 }}
                 >
-                  <style>{`
-                    [data-desc-scroll]::-webkit-scrollbar { display: none; }
-                    [data-desc-scroll] { scrollbar-width: none; }
-                  `}</style>
                   {description.split("\n\n").map((p, i) => (
-                    <p key={i} style={{ margin: i === 0 ? 0 : "16px 0 0" }}>{p}</p>
+                    <p key={i} className={styles.descParagraph}>{p}</p>
                   ))}
                 </div>
                 {descHasOverflow && (() => {
@@ -460,31 +329,21 @@ export default function StampModal({
                   return (
                     <div
                       ref={descTrackRef}
+                      className={styles.scrollTrack}
                       onMouseDown={(e) => {
                         setDescDragging(true);
                         handleDescScrollbarDrag(e.clientY);
                       }}
                       style={{
-                        position: "absolute",
-                        top: 0,
-                        right: 0,
-                        width: 8,
                         height: trackHeight,
                         backgroundColor: descHovered || descDragging ? "rgba(94, 90, 75, 0.2)" : "transparent",
-                        cursor: "pointer",
-                        borderRadius: 9999,
-                        transition: "background-color 0.2s ease",
                       }}
                     >
                       <div
+                        className={styles.scrollThumb}
                         style={{
-                          position: "absolute",
-                          left: 0,
                           top: thumbTop,
-                          width: 8,
                           height: thumbHeight,
-                          backgroundColor: "#5E5A4B",
-                          borderRadius: 9999,
                           transition: descDragging ? "none" : "top 0.1s ease",
                         }}
                       />
@@ -502,37 +361,6 @@ export default function StampModal({
   }
 
   // Mobile / Tablet
-  const mobileCloseButton = (
-    <button
-      type="button"
-      onClick={onClose}
-      onMouseEnter={(e) => e.currentTarget.style.background = "rgb(55, 55, 55)"}
-      onMouseLeave={(e) => e.currentTarget.style.background = "rgba(50, 48, 40, 0.6)"}
-      style={{
-        position: "fixed",
-        top: 16,
-        right: 16,
-        background: "rgba(50, 48, 40, 0.6)",
-        border: "none",
-        cursor: "pointer",
-        color: "#ffffff",
-        zIndex: 1002,
-        padding: 8,
-        transition: "background 0.15s ease",
-      }}
-      aria-label="Close"
-    >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path
-          d="M18 6L6 18M6 6l12 12"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-      </svg>
-    </button>
-  );
-
   return (
     <div
       ref={(node) => {
@@ -542,47 +370,36 @@ export default function StampModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="stamp-modal-title-mobile"
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        backgroundColor: "#1a1a1a",
-        overflowY: "auto",
-        color: "#ffffff",
-      }}
+      className={styles.mobileDialog}
     >
-      {mobileCloseButton}
+      <button
+        type="button"
+        onClick={onClose}
+        className={styles.mobileCloseButton}
+        aria-label="Close"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M18 6L6 18M6 6l12 12"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+        </svg>
+      </button>
 
       {/* Image — flush top/left/right */}
-      <div
-        style={{
-          width: "100%",
-          aspectRatio: "3 / 4",
-          backgroundColor: "#e8e4dc",
-          overflow: "hidden",
-        }}
-      >
+      <div className={styles.mobileImageWrap}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={imageSrc}
           alt={imageAlt}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
+          className={styles.mobileStampImage}
         />
       </div>
 
       {(previousStamp || nextStamp) && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "16px 16px 0",
-          }}
-        >
+        <div className={styles.mobileNav}>
           <div>{previousStamp && onPrevious && (
             <NavButton direction="previous" stamp={previousStamp} onClick={onPrevious} />
           )}</div>
@@ -592,42 +409,24 @@ export default function StampModal({
         </div>
       )}
 
-      <div style={{ padding: "24px 16px 40px" }}>
-        <h1
-          id="stamp-modal-title-mobile"
-          style={{
-            fontSize: 36,
-            fontWeight: 300,
-            margin: "0 0 24px",
-            lineHeight: 1.3,
-          }}
-        >
+      <div className={styles.mobileContent}>
+        <h1 id="stamp-modal-title-mobile" className={styles.mobileTitle}>
           {title}
         </h1>
 
-        <dl
-          aria-label="Stamp details"
-          style={{ display: "flex", flexDirection: "column", gap: 8, margin: "0 0 24px" }}
-        >
+        <dl aria-label="Stamp details" className={styles.mobileDetailsList}>
           {details.map((d) => (
-            <div key={d.label} style={{ fontSize: "1rem", lineHeight: 1.5 }}>
-              <dt style={{ fontWeight: 600, display: "inline" }}>{d.label}:</dt>{" "}
-              <dd style={{ opacity: 0.85, display: "inline", margin: 0 }}>{d.value}</dd>
+            <div key={d.label} className={styles.detailRow}>
+              <dt className={styles.detailLabel}>{d.label}:</dt>{" "}
+              <dd className={styles.detailValue}>{d.value}</dd>
             </div>
           ))}
         </dl>
 
         {description && (
-          <div
-            style={{
-              fontSize: "1.15rem",
-              lineHeight: "1.85rem",
-              opacity: 0.85,
-              marginBottom: 32,
-            }}
-          >
+          <div className={styles.mobileDescription}>
             {description.split("\n\n").map((p, i) => (
-              <p key={i} style={{ margin: i === 0 ? 0 : "16px 0 0" }}>{p}</p>
+              <p key={i} className={styles.descParagraph}>{p}</p>
             ))}
           </div>
         )}

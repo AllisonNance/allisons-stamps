@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Checkbox from "./Checkbox";
 import SearchInput from "./SearchInput";
+import styles from "./MobileFilterMenu.module.css";
 
 interface FilterConfig {
   label: string;
@@ -48,43 +49,18 @@ function AccordionSection({
   }
 
   return (
-    <div style={{ borderBottom: "1px solid #E9E9E9" }}>
+    <div className={styles.section}>
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
         aria-controls={panelId}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          width: "100%",
-          padding: "16px 0",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          color: "var(--color-text)",
-        }}
+        className={styles.sectionTrigger}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 16, fontWeight: 300 }}>{label}</span>
+        <div className={styles.sectionLabel}>
+          <span className={styles.sectionName}>{label}</span>
           {count > 0 && (
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 20,
-                height: 20,
-                backgroundColor: "#999070",
-                color: "#FFFFFF",
-                fontSize: 10,
-                fontWeight: 600,
-                borderRadius: 4,
-              }}
-            >
-              {count}
-            </span>
+            <span className={styles.sectionBadge}>{count}</span>
           )}
         </div>
         <svg
@@ -93,10 +69,7 @@ function AccordionSection({
           viewBox="0 0 12 12"
           fill="none"
           aria-hidden="true"
-          style={{
-            transition: "transform 0.15s",
-            transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-          }}
+          className={`${styles.sectionChevron} ${expanded ? styles.sectionChevronOpen : ""}`}
         >
           <path
             d="M2.5 4.5L6 8L9.5 4.5"
@@ -109,20 +82,13 @@ function AccordionSection({
       </button>
 
       {expanded && (
-        <div id={panelId} role="group" aria-label={`${label} options`} style={{ paddingBottom: 16 }}>
+        <div id={panelId} role="group" aria-label={`${label} options`} className={styles.sectionPanel}>
           {searchable && (
-            <div style={{ marginBottom: 12 }}>
+            <div className={styles.sectionSearch}>
               <SearchInput placeholder="" value={search} onChange={setSearch} />
             </div>
           )}
-          <div
-            style={scrollable ? {
-              maxHeight: 280,
-              overflowY: "auto",
-              scrollbarWidth: "thin",
-              scrollbarColor: "#5E5A4B transparent",
-            } : undefined}
-          >
+          <div className={scrollable ? styles.sectionScroll : undefined}>
             {filtered.map((item) => (
               <Checkbox
                 key={item}
@@ -132,9 +98,7 @@ function AccordionSection({
               />
             ))}
             {filtered.length === 0 && (
-              <p style={{ fontSize: 14, color: "#8E8A7C", padding: "8px 4px" }}>
-                No matches
-              </p>
+              <p className={styles.empty}>No matches</p>
             )}
           </div>
         </div>
@@ -190,37 +154,14 @@ export default function MobileFilterMenu({
       role="dialog"
       aria-modal="true"
       aria-label="Filters"
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        backgroundColor: "#ffffff",
-        display: "flex",
-        flexDirection: "column",
-      }}
+      className={styles.overlay}
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "16px 16px 16px",
-          flexShrink: 0,
-        }}
-      >
-        <span style={{ fontSize: 20, fontWeight: 500, color: "#5E5A4B" }}>
-          Filters
-        </span>
+      <div className={styles.header}>
+        <span className={styles.title}>Filters</span>
         <button
           type="button"
           onClick={onClose}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "#5E5A4B",
-            padding: 4,
-          }}
+          className={styles.closeButton}
           aria-label="Close filters"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -234,13 +175,7 @@ export default function MobileFilterMenu({
         </button>
       </div>
 
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: "0 16px",
-        }}
-      >
+      <div className={styles.body}>
         {filters.map((filter) => (
           <AccordionSection
             key={filter.label}
@@ -253,29 +188,11 @@ export default function MobileFilterMenu({
       </div>
 
       {hasAnySelected && (
-        <div
-          style={{
-            flexShrink: 0,
-            padding: 16,
-            borderTop: "1px solid #E9E9E9",
-          }}
-        >
+        <div className={styles.footer}>
           <button
             type="button"
             onClick={onClearAll}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#DEDEDE"}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#EBEBEB"}
-            style={{
-              width: "100%",
-              padding: "14px 16px",
-              fontSize: 16,
-              color: "var(--color-text)",
-              backgroundColor: "#EBEBEB",
-              border: "none",
-              cursor: "pointer",
-              borderRadius: 4,
-              transition: "background-color 0.15s ease",
-            }}
+            className={styles.clearButton}
           >
             Clear Filters
           </button>

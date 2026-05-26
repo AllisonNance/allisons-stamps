@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import type { Variants } from "motion/react";
 import {
   LazyMotion,
@@ -16,6 +15,7 @@ import {
   useRef,
   type HTMLAttributes,
 } from "react";
+import styles from "./SparklesIcon.module.css";
 
 export interface SparklesIconHandle {
   startAnimation: () => void;
@@ -45,12 +45,13 @@ const SparklesIcon = forwardRef<SparklesIconHandle, SparklesIconProps>(
     {
       onMouseEnter,
       onMouseLeave,
-      className,
       size = 24,
       duration = 1,
       isAnimated = true,
       color = "#5E5A4B",
       strokeWidth = 1.5,
+      className,
+      style,
       ...props
     },
     ref,
@@ -151,11 +152,11 @@ const SparklesIcon = forwardRef<SparklesIconHandle, SparklesIconProps>(
     return (
       <LazyMotion features={domMin} strict>
         <m.div
-          className={cn("inline-flex items-center justify-center", className)}
           onMouseEnter={handleEnter}
           onMouseLeave={handleLeave}
           {...props}
-          style={{ color, ...props.style }}
+          className={`${styles.wrapper} ${className || ""}`}
+          style={{ color, ...style }}
         >
           <m.svg
             xmlns="http://www.w3.org/2000/svg"

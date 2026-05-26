@@ -1,0 +1,79 @@
+.headerDesktop {
+  background: var(--background);
+  padding: 32px;
+}
+
+.desktopRow {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.surpriseWrap {
+  margin-left: auto;
+}
+
+.surpriseButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--background);
+  color: var(--color-text);
+  border: none;
+  cursor: pointer;
+}
+
+.surpriseInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 4px;
+  transition: border-color 0.15s;
+}
+
+.surpriseButton:hover .surpriseInner {
+  border-color: #8E8A7C;
+}
+
+.surpriseLabel {
+  font-size: 16px;
+  font-weight: 300;
+}
+
+/* Mobile */
+.headerMobile {
+  background: var(--background);
+  padding: 16px;
+  position: relative;
+}
+
+.mobileActions {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+}
+
+.filterIconDefault {
+  color: #5E5A4B;
+}
+
+.filterIconActive {
+  color: #999070;
+}

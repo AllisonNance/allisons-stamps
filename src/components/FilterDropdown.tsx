@@ -101,7 +101,7 @@ export default function FilterDropdown({
           paddingBottom: 4,
           transition: "border-color 0.15s",
         }}>
-        <span style={{ fontSize: 18, fontWeight: 500 }}>{label}</span>
+        <span style={{ fontSize: 18, fontWeight: 300 }}>{label}</span>
         {count !== undefined && (
           <span
             style={{

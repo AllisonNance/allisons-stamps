@@ -67,7 +67,7 @@ function AccordionSection({
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 18, fontWeight: 500 }}>{label}</span>
+          <span style={{ fontSize: 18, fontWeight: 300 }}>{label}</span>
           {count > 0 && (
             <span
               style={{
@@ -204,7 +204,7 @@ export default function MobileFilterMenu({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "16px 16px 0",
+          padding: "16px 16px 16px",
           flexShrink: 0,
         }}
       >

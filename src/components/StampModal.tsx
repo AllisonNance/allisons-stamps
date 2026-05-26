@@ -71,10 +71,12 @@ function NavButton({
   direction,
   stamp,
   onClick,
+  color = "#ffffff",
 }: {
   direction: "previous" | "next";
   stamp: NavStamp;
   onClick: () => void;
+  color?: string;
 }) {
   const [hovered, setHovered] = useState(false);
   const isPrev = direction === "previous";
@@ -93,7 +95,7 @@ function NavButton({
         background: "none",
         border: "none",
         cursor: "pointer",
-        color: "#ffffff",
+        color,
         padding: 0,
         flexDirection: isPrev ? "row" : "row-reverse",
       }}
@@ -393,22 +395,24 @@ export default function StampModal({
               {title}
             </h1>
 
-            <div
+            <dl
+              aria-label="Stamp details"
               style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: 8,
                 marginBottom: 40,
                 flexShrink: 0,
+                margin: "0 0 40px",
               }}
             >
               {details.map((d) => (
                 <div key={d.label} style={{ fontSize: "1rem", lineHeight: 1.5 }}>
-                  <span style={{ fontWeight: 600 }}>{d.label}:</span>{" "}
-                  <span style={{ opacity: 0.85 }}>{d.value}</span>
+                  <dt style={{ fontWeight: 600, display: "inline" }}>{d.label}:</dt>{" "}
+                  <dd style={{ opacity: 0.85, display: "inline", margin: 0 }}>{d.value}</dd>
                 </div>
               ))}
-            </div>
+            </dl>
 
             {/* Description — custom scrollbar */}
             {description && (
@@ -425,6 +429,9 @@ export default function StampModal({
                 <div
                   ref={descRef}
                   data-desc-scroll
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Stamp description"
                   style={{
                     position: "absolute",
                     inset: 0,
@@ -567,6 +574,24 @@ export default function StampModal({
         />
       </div>
 
+      {(previousStamp || nextStamp) && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "16px 16px 0",
+          }}
+        >
+          <div>{previousStamp && onPrevious && (
+            <NavButton direction="previous" stamp={previousStamp} onClick={onPrevious} />
+          )}</div>
+          <div>{nextStamp && onNext && (
+            <NavButton direction="next" stamp={nextStamp} onClick={onNext} />
+          )}</div>
+        </div>
+      )}
+
       <div style={{ padding: "24px 16px 40px" }}>
         <h1
           id="stamp-modal-title-mobile"
@@ -580,14 +605,17 @@ export default function StampModal({
           {title}
         </h1>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 24 }}>
+        <dl
+          aria-label="Stamp details"
+          style={{ display: "flex", flexDirection: "column", gap: 8, margin: "0 0 24px" }}
+        >
           {details.map((d) => (
             <div key={d.label} style={{ fontSize: "1rem", lineHeight: 1.5 }}>
-              <span style={{ fontWeight: 600 }}>{d.label}:</span>{" "}
-              <span style={{ opacity: 0.85 }}>{d.value}</span>
+              <dt style={{ fontWeight: 600, display: "inline" }}>{d.label}:</dt>{" "}
+              <dd style={{ opacity: 0.85, display: "inline", margin: 0 }}>{d.value}</dd>
             </div>
           ))}
-        </div>
+        </dl>
 
         {description && (
           <div

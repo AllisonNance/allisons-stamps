@@ -52,14 +52,28 @@ function filterItems(items: GalleryItem[], selections: Record<string, string[]>,
   });
 }
 
+function shuffleArray<T>(arr: T[]): T[] {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export default function HomePageClient({ filters: initialFilters, items }: HomePageClientProps) {
   const [selectedStamp, setSelectedStamp] = useState<GalleryItem | null>(null);
   const [filterSelections, setFilterSelections] = useState<Record<string, string[]>>({});
+  const [shuffledItems, setShuffledItems] = useState<GalleryItem[] | null>(null);
 
-  const filteredItems = useMemo(
-    () => filterItems(items, filterSelections),
-    [items, filterSelections]
-  );
+  const filteredItems = useMemo(() => {
+    const source = shuffledItems ?? items;
+    return filterItems(source, filterSelections);
+  }, [items, shuffledItems, filterSelections]);
+
+  const handleShuffle = useCallback(() => {
+    setShuffledItems(shuffleArray(items));
+  }, [items]);
 
   const dynamicFilters = useMemo(() => {
     return initialFilters.map((f) => {
@@ -115,8 +129,11 @@ export default function HomePageClient({ filters: initialFilters, items }: HomeP
           e.currentTarget.style.zIndex = "9999";
           e.currentTarget.style.background = "var(--background)";
           e.currentTarget.style.padding = "8px 16px";
-          e.currentTarget.style.color = "var(--color-text)";
-          e.currentTarget.style.fontWeight = "600";
+          e.currentTarget.style.color = "#5E5A4B";
+          e.currentTarget.style.fontSize = "18px";
+          e.currentTarget.style.fontWeight = "300";
+          e.currentTarget.style.outline = "2px solid #8E8A7C";
+          e.currentTarget.style.outlineOffset = "2px";
         }}
         onBlur={(e) => {
           e.currentTarget.style.position = "absolute";
@@ -124,11 +141,12 @@ export default function HomePageClient({ filters: initialFilters, items }: HomeP
           e.currentTarget.style.width = "1px";
           e.currentTarget.style.height = "1px";
           e.currentTarget.style.overflow = "hidden";
+          e.currentTarget.style.outline = "";
         }}
       >
-        Skip to gallery
+        Skip to Gallery
       </a>
-      <SiteHeader filters={dynamicFilters} onFilterChange={setFilterSelections} />
+      <SiteHeader filters={dynamicFilters} onFilterChange={setFilterSelections} onShuffle={handleShuffle} />
       <main id="main-gallery">
       <StampGallery items={filteredItems} onStampClick={setSelectedStamp} />
       </main>

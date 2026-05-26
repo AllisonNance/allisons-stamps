@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback } from "react";
 import SiteHeader from "./SiteHeader";
 import StampGallery from "./StampGallery";
 import StampModal from "./StampModal";
+import SiteFooter from "./SiteFooter";
 import BackToTop from "./BackToTop";
 
 interface FilterConfig {
@@ -131,6 +132,7 @@ export default function HomePageClient({ filters: initialFilters, items }: HomeP
       <main id="main-gallery">
       <StampGallery items={filteredItems} onStampClick={setSelectedStamp} />
       </main>
+      <SiteFooter />
       <BackToTop />
       {selectedStamp && (
         <StampModal

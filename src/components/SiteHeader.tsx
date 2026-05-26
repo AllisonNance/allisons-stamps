@@ -52,7 +52,7 @@ export default function SiteHeader({ filters, onFilterChange }: SiteHeaderProps)
 
   if (isDesktop) {
     return (
-      <header style={{ background: "var(--background)", padding: "48px 24px 32px" }}>
+      <header style={{ background: "var(--background)", padding: "32px 24px 32px" }}>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Logo height={140} />
         </div>

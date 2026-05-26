@@ -63,11 +63,11 @@ function AccordionSection({
           background: "none",
           border: "none",
           cursor: "pointer",
-          color: "#5E5A4B",
+          color: "var(--color-text)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 18, fontWeight: 300 }}>{label}</span>
+          <span style={{ fontSize: 16, fontWeight: 300 }}>{label}</span>
           {count > 0 && (
             <span
               style={{
@@ -100,7 +100,7 @@ function AccordionSection({
         >
           <path
             d="M2.5 4.5L6 8L9.5 4.5"
-            stroke="currentColor"
+            stroke="#5E5A4B"
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"

@@ -87,7 +87,7 @@ export default function SiteHeader({ filters, onFilterChange, onShuffle }: SiteH
               gap: 8,
               padding: "8px 12px",
               background: "var(--background)",
-              color: "#5E5A4B",
+              color: "var(--color-text)",
               border: "none",
               cursor: "pointer",
             }}
@@ -105,7 +105,7 @@ export default function SiteHeader({ filters, onFilterChange, onShuffle }: SiteH
               }}
             >
               <SparklesIcon ref={sparkleRef} size={22} />
-              <span style={{ fontSize: 18, fontWeight: 300 }}>Surprise Me</span>
+              <span style={{ fontSize: 16, fontWeight: 300 }}>Surprise Me</span>
             </span>
           </button>
           </div>

@@ -84,7 +84,7 @@ export default function FilterDropdown({
           gap: 8,
           padding: "8px 12px",
           background: "var(--background)",
-          color: "#5E5A4B",
+          color: "var(--color-text)",
           border: "none",
           cursor: "pointer",
         }}
@@ -101,7 +101,7 @@ export default function FilterDropdown({
           paddingBottom: 4,
           transition: "border-color 0.15s",
         }}>
-        <span style={{ fontSize: 18, fontWeight: 300 }}>{label}</span>
+        <span style={{ fontSize: 16, fontWeight: 300 }}>{label}</span>
         {count !== undefined && (
           <span
             style={{
@@ -133,7 +133,7 @@ export default function FilterDropdown({
         >
           <path
             d="M2.5 4.5L6 8L9.5 4.5"
-            stroke="currentColor"
+            stroke="#5E5A4B"
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"

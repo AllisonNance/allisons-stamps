@@ -18,7 +18,7 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background-color: rgba(153, 144, 112, 0.3);
+  background-color: #9990703d;
   color: var(--color-text);
   border: none;
   cursor: pointer;
@@ -27,7 +27,7 @@
 }
 
 .surpriseButton:hover {
-  background-color: rgba(153, 144, 112, 0.4);
+  background-color: #9990704d;
 }
 
 .surpriseInner {

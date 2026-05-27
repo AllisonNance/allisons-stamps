@@ -117,12 +117,12 @@ export default function HomePageClient({ filters: initialFilters, items }: HomeP
   }, [nextStamp]);
 
   return (
-    <>
+    <div className={styles.pageWrap}>
       <a href="#main-gallery" className={styles.skipLink}>
         Skip to Gallery
       </a>
       <SiteHeader filters={dynamicFilters} onFilterChange={setFilterSelections} onShuffle={handleShuffle} />
-      <main id="main-gallery">
+      <main id="main-gallery" className={styles.main}>
       <StampGallery items={filteredItems} onStampClick={setSelectedStamp} />
       </main>
       <SiteFooter />
@@ -148,6 +148,6 @@ export default function HomePageClient({ filters: initialFilters, items }: HomeP
           onNext={nextStamp ? goToNext : undefined}
         />
       )}
-    </>
+    </div>
   );
 }

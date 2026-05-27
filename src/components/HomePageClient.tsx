@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import SiteHeader from "./SiteHeader";
 import StampGallery from "./StampGallery";
 import StampModal from "./StampModal";
@@ -66,6 +66,14 @@ export default function HomePageClient({ filters: initialFilters, items }: HomeP
   const [selectedStamp, setSelectedStamp] = useState<GalleryItem | null>(null);
   const [filterSelections, setFilterSelections] = useState<Record<string, string[]>>({});
   const [shuffledItems, setShuffledItems] = useState<GalleryItem[] | null>(null);
+  const initialShuffleDone = useRef(false);
+
+  useEffect(() => {
+    if (!initialShuffleDone.current) {
+      initialShuffleDone.current = true;
+      setShuffledItems(shuffleArray(items));
+    }
+  }, [items]);
 
   const filteredItems = useMemo(() => {
     const source = shuffledItems ?? items;

@@ -3,10 +3,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import styles from "./StampModal.module.css";
 
-function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean) {
+function useFocusTrap(
+  containerRef: React.RefObject<HTMLElement | null>,
+  initialFocusRef: React.RefObject<HTMLElement | null>,
+  active: boolean,
+) {
   useEffect(() => {
-    if (!active || !ref.current) return;
-    const root = ref.current;
+    if (!active || !containerRef.current) return;
+    const root = containerRef.current;
     const previouslyFocused = document.activeElement as HTMLElement | null;
 
     const focusableSelector =
@@ -32,8 +36,12 @@ function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean)
     }
 
     requestAnimationFrame(() => {
-      const focusable = getFocusable();
-      if (focusable.length > 0) focusable[0].focus();
+      if (initialFocusRef.current) {
+        initialFocusRef.current.focus();
+      } else {
+        const focusable = getFocusable();
+        if (focusable.length > 0) focusable[0].focus();
+      }
     });
 
     root.addEventListener("keydown", handleKeyDown);
@@ -41,7 +49,7 @@ function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean)
       root.removeEventListener("keydown", handleKeyDown);
       previouslyFocused?.focus();
     };
-  }, [active, ref]);
+  }, [active, containerRef, initialFocusRef]);
 }
 
 interface StampDetail {
@@ -132,6 +140,7 @@ export default function StampModal({
     typeof window !== "undefined" ? window.matchMedia("(min-width: 1024px)").matches : false
   );
   const modalRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const mobileScrollRef = useRef<HTMLDivElement>(null);
   const descRef = useRef<HTMLDivElement>(null);
   const descTrackRef = useRef<HTMLDivElement>(null);
@@ -228,9 +237,13 @@ export default function StampModal({
     };
   }, [descDragging]);
 
-  useFocusTrap(modalRef, open);
+  useFocusTrap(modalRef, headingRef, open);
 
   if (!open) return null;
+
+  // Build a readable string for the details so screen readers
+  // announce the full info when the details list receives focus
+  const detailsSummary = details.map((d) => `${d.label}: ${d.value}`).join(". ");
 
   const navBar = (previousStamp || nextStamp) ? (
     <div className={styles.navBar}>
@@ -287,11 +300,20 @@ export default function StampModal({
 
           {/* Right panel — centered vertically */}
           <div className={styles.infoPanel}>
-            <h1 id="stamp-modal-title" className={styles.title}>
+            <h1
+              ref={headingRef}
+              id="stamp-modal-title"
+              className={styles.title}
+              tabIndex={-1}
+            >
               {title}
             </h1>
 
-            <dl aria-label="Stamp details" className={styles.detailsList}>
+            <dl
+              aria-label={detailsSummary}
+              className={styles.detailsList}
+              tabIndex={0}
+            >
               {details.map((d) => (
                 <div key={d.label} className={styles.detailRow}>
                   <dt className={styles.detailLabel}>{d.label}:</dt>{" "}
@@ -310,8 +332,8 @@ export default function StampModal({
                 <div
                   ref={descRef}
                   tabIndex={0}
-                  role="region"
-                  aria-label="Stamp description"
+                  role="group"
+                  aria-label={`Description: ${description}`}
                   className={styles.descriptionScroll}
                   style={{ paddingRight: descHasOverflow ? 40 : 0 }}
                 >
@@ -410,11 +432,20 @@ export default function StampModal({
       )}
 
       <div className={styles.mobileContent}>
-        <h1 id="stamp-modal-title-mobile" className={styles.mobileTitle}>
+        <h1
+          ref={headingRef}
+          id="stamp-modal-title-mobile"
+          className={styles.mobileTitle}
+          tabIndex={-1}
+        >
           {title}
         </h1>
 
-        <dl aria-label="Stamp details" className={styles.mobileDetailsList}>
+        <dl
+          aria-label={detailsSummary}
+          className={styles.mobileDetailsList}
+          tabIndex={0}
+        >
           {details.map((d) => (
             <div key={d.label} className={styles.detailRow}>
               <dt className={styles.detailLabel}>{d.label}:</dt>{" "}
@@ -424,7 +455,12 @@ export default function StampModal({
         </dl>
 
         {description && (
-          <div className={styles.mobileDescription}>
+          <div
+            className={styles.mobileDescription}
+            tabIndex={0}
+            role="group"
+            aria-label={`Description: ${description}`}
+          >
             {description.split("\n\n").map((p, i) => (
               <p key={i} className={styles.descParagraph}>{p}</p>
             ))}

@@ -68,7 +68,7 @@ export default function SiteHeader({ filters, onFilterChange, onShuffle }: SiteH
     return (
       <header className={styles.headerDesktop}>
         <div className={styles.desktopRow}>
-          <Logo height={110} />
+          <Logo width={100} />
           <FilterBar filters={filters} onChange={handleFilterChange} />
           <div className={styles.surpriseWrap}>
             <button

@@ -76,6 +76,12 @@
   margin: 0 0 28px;
   line-height: 1.3;
   flex-shrink: 0;
+  outline: none;
+}
+
+.title:focus-visible {
+  outline: 2px solid #8E8A7C;
+  outline-offset: 4px;
 }
 
 .detailsList {
@@ -84,6 +90,12 @@
   gap: 8px;
   margin: 0 0 40px;
   flex-shrink: 0;
+  outline: none;
+}
+
+.detailsList:focus-visible {
+  outline: 2px solid #8E8A7C;
+  outline-offset: 4px;
 }
 
 .detailRow {
@@ -117,6 +129,12 @@
   opacity: 0.85;
   overflow-y: auto;
   scrollbar-width: none;
+  outline: none;
+}
+
+.descriptionScroll:focus-visible {
+  outline: 2px solid #8E8A7C;
+  outline-offset: 4px;
 }
 
 .descriptionScroll::-webkit-scrollbar {
@@ -226,6 +244,12 @@
   font-weight: 300;
   margin: 0 0 24px;
   line-height: 1.3;
+  outline: none;
+}
+
+.mobileTitle:focus-visible {
+  outline: 2px solid #8E8A7C;
+  outline-offset: 4px;
 }
 
 .mobileDetailsList {
@@ -233,6 +257,12 @@
   flex-direction: column;
   gap: 8px;
   margin: 0 0 24px;
+  outline: none;
+}
+
+.mobileDetailsList:focus-visible {
+  outline: 2px solid #8E8A7C;
+  outline-offset: 4px;
 }
 
 .mobileDescription {
@@ -240,6 +270,12 @@
   line-height: 1.85rem;
   opacity: 0.85;
   margin-bottom: 32px;
+  outline: none;
+}
+
+.mobileDescription:focus-visible {
+  outline: 2px solid #8E8A7C;
+  outline-offset: 4px;
 }
 
 /* Scrollbar track */

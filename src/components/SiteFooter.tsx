@@ -17,7 +17,7 @@ export default function SiteFooter() {
 
   return (
     <footer className={`${styles.footer} ${isDesktop ? styles.footerDesktop : ""}`}>
-      <Logo height={isDesktop ? 110 : 80} />
+      <Logo {...(isDesktop ? { width: 100 } : { height: 80 })} />
       <div className={styles.right}>
         <a href="mailto:allison@availta.com" className={styles.link}>
           Get in Touch

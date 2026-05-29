@@ -5,12 +5,15 @@
 
 .desktopRow {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 32px;
 }
 
 .surpriseWrap {
   margin-left: auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 .surpriseButton {
@@ -59,14 +62,14 @@
 
 .iconButton {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
 }
 
 .filterIconDefault {

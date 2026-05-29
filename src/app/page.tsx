@@ -9,8 +9,8 @@ export default async function HomePage() {
   const categories = await getAllCategories();
   const collections = await getAllCollections();
 
-  const countries = [...new Set(stamps.map((s) => s.country).filter(Boolean))] as string[];
-  const years = [...new Set(stamps.map((s) => s.year).filter((y): y is number => y != null))].sort((a, b) => b - a).map(String);
+  const countries = ([...new Set(stamps.map((s) => s.country).filter(Boolean))] as string[]).sort((a, b) => a.localeCompare(b));
+  const years = [...new Set(stamps.map((s) => s.year).filter((y): y is number => y != null))].sort((a, b) => a - b).map(String);
 
   const filters = [
     { label: "Country", items: countries },

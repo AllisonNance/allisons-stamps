@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Logo from "./Logo";
 import FilterBar from "./FilterBar";
 import MobileFilterMenu from "./MobileFilterMenu";
+import { ArrowDownUpIcon, type ArrowDownUpIconHandle } from "./ArrowDownUpIcon";
 import { SparklesIcon, type SparklesIconHandle } from "./SparklesIcon";
 import styles from "./SiteHeader.module.css";
 
@@ -16,12 +17,15 @@ interface SiteHeaderProps {
   filters: FilterConfig[];
   onFilterChange?: (selections: Record<string, string[]>) => void;
   onShuffle?: () => void;
+  onSurpriseMe?: () => void;
 }
 
-export default function SiteHeader({ filters, onFilterChange, onShuffle }: SiteHeaderProps) {
+export default function SiteHeader({ filters, onFilterChange, onShuffle, onSurpriseMe }: SiteHeaderProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selections, setSelections] = useState<Record<string, string[]>>({});
+  const shuffleRef = useRef<ArrowDownUpIconHandle>(null);
+  const mobileShuffleRef = useRef<ArrowDownUpIconHandle>(null);
   const sparkleRef = useRef<SparklesIconHandle>(null);
   const mobileSparkleRef = useRef<SparklesIconHandle>(null);
 
@@ -40,9 +44,9 @@ export default function SiteHeader({ filters, onFilterChange, onShuffle }: SiteH
 
   useEffect(() => {
     if (isDesktop) return;
-    mobileSparkleRef.current?.startAnimation();
+    mobileShuffleRef.current?.startAnimation();
     const timer = setTimeout(() => {
-      mobileSparkleRef.current?.stopAnimation();
+      mobileShuffleRef.current?.stopAnimation();
     }, 3600);
     return () => clearTimeout(timer);
   }, [isDesktop]);
@@ -74,6 +78,19 @@ export default function SiteHeader({ filters, onFilterChange, onShuffle }: SiteH
             <button
               type="button"
               onClick={onShuffle}
+              onMouseEnter={() => shuffleRef.current?.startAnimation()}
+              onMouseLeave={() => shuffleRef.current?.stopAnimation()}
+              className={styles.surpriseButton}
+              aria-label="Shuffle"
+            >
+              <span className={styles.surpriseInner}>
+                <ArrowDownUpIcon ref={shuffleRef} size={22} />
+                <span className={styles.surpriseLabel}>Shuffle</span>
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={onSurpriseMe}
               onMouseEnter={() => sparkleRef.current?.startAnimation()}
               onMouseLeave={() => sparkleRef.current?.stopAnimation()}
               className={styles.surpriseButton}
@@ -97,6 +114,14 @@ export default function SiteHeader({ filters, onFilterChange, onShuffle }: SiteH
           <button
             type="button"
             onClick={onShuffle}
+            className={styles.iconButton}
+            aria-label="Shuffle"
+          >
+            <ArrowDownUpIcon ref={mobileShuffleRef} size={26} />
+          </button>
+          <button
+            type="button"
+            onClick={onSurpriseMe}
             className={styles.iconButton}
             aria-label="Surprise me"
           >

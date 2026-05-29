@@ -84,6 +84,12 @@ export default function HomePageClient({ filters: initialFilters, items }: HomeP
     setShuffledItems(shuffleArray(items));
   }, [items]);
 
+  const handleSurpriseMe = useCallback(() => {
+    const source = filteredItems.length > 0 ? filteredItems : items;
+    const randomStamp = source[Math.floor(Math.random() * source.length)];
+    setSelectedStamp(randomStamp);
+  }, [filteredItems, items]);
+
   const dynamicFilters = useMemo(() => {
     return initialFilters.map((f) => {
       const itemsMatchingOtherFilters = filterItems(items, filterSelections, f.label);
@@ -121,7 +127,7 @@ export default function HomePageClient({ filters: initialFilters, items }: HomeP
       <a href="#main-gallery" className={styles.skipLink}>
         Skip to Gallery
       </a>
-      <SiteHeader filters={dynamicFilters} onFilterChange={setFilterSelections} onShuffle={handleShuffle} />
+      <SiteHeader filters={dynamicFilters} onFilterChange={setFilterSelections} onShuffle={handleShuffle} onSurpriseMe={handleSurpriseMe} />
       <main id="main-gallery" className={styles.main}>
       <StampGallery items={filteredItems} onStampClick={setSelectedStamp} />
       </main>
